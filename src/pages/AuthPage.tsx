@@ -43,7 +43,7 @@ export const AuthPage = () => {
         <div className="w-100 h-100 d-flex justify-content-center align-items-center flex-column">
             <div className=" d-flex flex-column auth">
                 <div className="auth-content d-flex flex-column">
-                    <h3 className="mb-3">Авторизация в системе</h3>
+                    <h3 className="mb-3">Авторизация в hd-erp</h3>
                     <div className="d-flex flex-column">
                         <div className="mb-3">
                             <input
@@ -72,14 +72,14 @@ export const AuthPage = () => {
                         >
                             Войти
                         </button>
-                            <button
+                            {/* <button
                             type="submit"
                             className="btn btn-success btn-shadow"
                             onClick={registerHandler}
                             disabled={loading}
                         >
                             Регистрация
-                        </button>
+                        </button> */}
                     </div>
                 </div>
 

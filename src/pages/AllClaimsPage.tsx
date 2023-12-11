@@ -51,7 +51,7 @@ export const AllClaimsPage = () => {
                     <Link to="/all" className="btn btn-primary fs-4 my-3 mx-3 btn-hover btn-shadow" onClick={fetchClaims}>
                         <i className="bi bi-arrow-clockwise"/>
                     </Link>
-                    <Link to="/" className="d-flex btn btn-sm btn-success btn-outline-success btn-hover text-white fs-5  flex-nowrap btn-shadow">Мои заявки</Link>
+                    <Link to="/" className="d-flex btn btn-sm btn-success btn-outline-success btn-hover text-white fs-6 flex-nowrap btn-shadow">Мои заявки</Link>
                     <Link
                         className="btn btn-sm btn-danger text-white btn-shadow"
                         to="/"
