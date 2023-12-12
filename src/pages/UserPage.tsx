@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, FC } from 'react'
 import { useUserStore } from '../store/user-store'
+import { Iuser } from '../store/user-store'
 
-export const UserPage = () => {
-    const user = useUserStore((state) => state.user)
+export const UserPage: FC = () => {
+    const {id, name, login, last_activity_time, email, phone, position} = useUserStore<Iuser>((state) => state.user)
     const getData = useUserStore((state) => state.getData)
 
     useEffect(() => {
@@ -12,14 +13,13 @@ export const UserPage = () => {
     return (
         <>
             <div>UserPage</div>
-            <div>{user.id}</div>
-            <div>{user.name}</div>
-            <div>{user.login}</div>
-            <div>{user.short_name}</div>
-            <div>{user.last_activity_time}</div>
-            <div>{user.email}</div>
-            <div>{user.phone}</div>
-           {/* <div>{user.division.division_id}</div> */}
+            <div>{id}</div>
+            <div>{name}</div>
+            <div>{login}</div>
+            <div>{last_activity_time}</div>
+            <div>{email}</div>
+            <div>{phone}</div>
+           <div>{position}</div>
         </>
     )
 }
