@@ -4,6 +4,7 @@ import { AuthPage } from './pages/AuthPage'
 import { AllClaimsPage } from './pages/AllClaimsPage'
 import { MapPage } from './pages/MapPage'
 import { DetailPage } from './pages/DetailPage'
+import { UserPage } from './pages/UserPage'
 
 export const useRoutes = (isAuthenticated: boolean) => {
     if (isAuthenticated) {
@@ -19,6 +20,10 @@ export const useRoutes = (isAuthenticated: boolean) => {
                 </Route>
                 <Route path="/all"
                        element={<AllClaimsPage/>}
+                >
+                      </Route>
+                <Route path="/user"
+                       element={<UserPage/>}
                 >
                 </Route>
                 <Route path="/coordinates/:id"
