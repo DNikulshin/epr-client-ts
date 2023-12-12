@@ -1,72 +1,66 @@
-import {create} from 'zustand'
-//  import shallow from 'zustand/shallow'
-import {persist} from 'zustand/middleware'
-import axios from 'axios'
-
-const instanceAxios = axios.create({
-    baseURL: import.meta.env.API_URL,
-    params: {
-        key: import.meta.env.API_KEY
-    }
-
-})
+import { create } from 'zustand'
+import { instanceAxios } from '../axios'
 
 console.log(import.meta.env)
 
 
 interface authStore {
     isAuth: boolean
-    responseResult: {
-        Result: string | null
-    }
+    responseResult: string | null
     userName: string | null
     userId: number | null
     checkAuth: (login: string, password: string) => void
-    cat?: string
-    action?: string
-
+    getEmployeeId: () => void
 }
 
-export const useAuthStore = create<authStore>()
-persist(
-    (set, get) => ({
-        isAuth: false,
-        responseResult: {
-            Result: ''
-        },
-        userName: null,
-        userId: null,
-        checkAuth: async (login: string, pass: string) => {
-            try {
-                const responseCheckAuth = await instanceAxios('', {
-                        params: {
-                            cat: 'employee',
-                            action: 'check_pass',
-                            login,
-                            pass
-                        }
-                    })
-             
-                if (responseCheckAuth.status !== 200) throw new Error('Что-то пошло не так')
-                const {Result} = get().res
-                if (Result === 'OK') {
-                    set({res: responseCheckAuth.data})
-                    set({userName: login})
-                    set({isAuth: true})
-                }
+interface responseAuth {
+    Result: string | null
+}
 
-                const responseGetUserId = await instanceAxios('', {
-                    params: {
-                        cat: 'employee',
-                        action: 'get_employee_id',
-                        'data_typer': 'login',
-                        'data_value': login
-                    }
-                })
-                const {id} = responseGetUserId.data
-                set({userId: id})
-            } catch (e) {
-                console.log(e)
-            }
-        },
-    }), {name: 'authStore'})
+
+export const useAuthStore = create<authStore>((set, get) => ({
+    isAuth: false,
+    responseResult: null,
+    userName: null,
+    userId: null,
+    checkAuth: async (login: string, pass: string) => {
+        try {
+
+            const {data: {Result}} = await instanceAxios('/check_pass', {
+                // params: {
+                //     cat: 'employee',
+                //     action: 'check_pass',
+                //     login,
+                //     pass
+                // }
+            })
+           if(Result === 'OK') {
+            set({isAuth: true})
+           }
+        
+        } catch (e) {
+            console.log(e)
+
+        }
+
+    },
+    getEmployeeId: async () => {
+        try {
+            const responseGetUserId = await instanceAxios('/get_employee_id', {
+                // params: {
+                //     cat: 'employee',
+                //     action: 'get_employee_id',
+                //     'data_typer': 'login',
+                //     'data_value': login
+                // }
+            })
+
+            console.log(responseGetUserId.data)
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+
+}))

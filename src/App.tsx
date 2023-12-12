@@ -4,21 +4,24 @@ import { useAuth } from './hooks/auth.hook'
 import { AuthContext } from './context/AuthContext'
 import { Loader } from './components/Loader'
 import { ToastContainer } from 'react-toastify'
+import { useEffect } from 'react'
+import {useAuthStore} from './store/auth-store'
 
 
 export default function App() {
-  const {login, logout, userId, ready } = useAuth()
-  const isAuthenticated = !!1
-  const routes = useRoutes(isAuthenticated)
+    const isAuth  = useAuthStore(state => state.isAuth)
+    const checkAuth  = useAuthStore(state => state.checkAuth)
+  const routes = useRoutes(isAuth)
 
-  if (!ready) {
-      return <Loader/>
-  }
+  useEffect( () => {
+    checkAuth('ndu', '111')
+  }, [isAuth])
+
+//   if (!ready) {
+//       return <Loader/>
+//   }
 
   return (
-      <AuthContext.Provider value={{
-          login, logout, userId, isAuthenticated
-      }}>
       <Router>
         <div className="container position-relative">
             <small className="version-app">v2</small>
@@ -26,6 +29,5 @@ export default function App() {
          <ToastContainer position='top-center'/>
         </div>
       </Router>
-      </AuthContext.Provider>
 )
 }
