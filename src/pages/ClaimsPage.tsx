@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState, useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { useCallback, useEffect, useState } from 'react'
+
 import { useHttp } from '../hooks/http.hook'
-import { AuthContext } from '../context/AuthContext'
 import { Loader } from '../components/Loader'
 import { ClaimsList } from '../components/ClaimsList'
+import { Navigation } from '../components/Navigation'
 
 export const ClaimsPage = () => {
-    const auth = useContext(AuthContext)
+   // const auth = useContext(AuthContext)
     const [claims, setClaims] = useState([])
 
     const { loading, request } = useHttp()
@@ -37,20 +37,8 @@ export const ClaimsPage = () => {
 
     return (
         <>
-                <div className="d-flex justify-content-center text-center gap-4 align-items-center bg-secondary bg-opacity-50 w-100 flex-nowrap rounded">
-                    <Link to="/" className="btn btn-primary fs-4 my-3 mx-3 btn-hover btn-shadow" onClick={fetchClaims}>
-                        <i className="bi bi-arrow-clockwise"/>
-                    </Link>
-                    <Link to="/all" className="d-flex btn btn-sm btn-success btn-outline-success btn-hover text-white fs-6 flex-nowrap btn-shadow">Все заявки</Link>
-                    <Link
-                        className="btn btn-sm btn-danger text-white btn-shadow"
-                        to="/"
-                        title="Выйти"
-                        onClick={auth.logout}
-                    >
-                        Выйти
-                    </Link>
-                </div>
+        <Navigation fetchClaims={fetchClaims} buttonTypeText='Все заявки' linkTo='/all' currentRoute='/'/>
+    
                 {claims.length > 0 &&
                     <div className="bg-light p-2 text-center">Всего:&nbsp;<strong
                         className="text-success mx-4">{claims.length}</strong>

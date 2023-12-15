@@ -1,17 +1,16 @@
-import { useCallback, useEffect, useState, useContext } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useHttp } from '../hooks/http.hook'
 import { Loader } from '../components/Loader'
 import { ClaimsList } from '../components/ClaimsList'
-import { Link } from 'react-router-dom'
-import { AuthContext } from '../context/AuthContext'
 import Select from '../components/Select'
+import { Navigation } from '../components/Navigation'
 
 const CLAIMS_TODAY = 3
 const  CLAIMS_YESTERDAY = 4
 const CLAIMS_TOMORROW = 5
 
 export const AllClaimsPage = () => {
-    const auth = useContext(AuthContext)
+    //const auth = useContext(AuthContext)
     const [claims, setClaims] = useState([])
     const [selectValue, setSelectValue] = useState(CLAIMS_TODAY)
 
@@ -47,20 +46,7 @@ export const AllClaimsPage = () => {
 
     return (
         <>
-                <div className="d-flex justify-content-center text-center gap-4 align-items-center bg-secondary bg-opacity-50 flex-nowrap rounded">
-                    <Link to="/all" className="btn btn-primary fs-4 my-3 mx-3 btn-hover btn-shadow" onClick={fetchClaims}>
-                        <i className="bi bi-arrow-clockwise"/>
-                    </Link>
-                    <Link to="/" className="d-flex btn btn-sm btn-success btn-outline-success btn-hover text-white fs-6 flex-nowrap btn-shadow">Мои заявки</Link>
-                    <Link
-                        className="btn btn-sm btn-danger text-white btn-shadow"
-                        to="/"
-                        title="Выйти"
-                        onClick={auth.logout}
-                    >
-                        Выйти
-                    </Link>
-                </div>
+            <Navigation fetchClaims={fetchClaims} buttonTypeText='Мои заявки' linkTo='/' currentRoute='/all'/>
            <Select
                         label={"Выберите позицию"}
                         value={selectValue}
