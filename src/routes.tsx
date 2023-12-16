@@ -5,9 +5,12 @@ import { AllClaimsPage } from './pages/AllClaimsPage'
 import { MapPage } from './pages/MapPage'
 import { DetailPage } from './pages/DetailPage'
 import { UserPage } from './pages/UserPage'
+import {useAuthStore} from "./store/auth-store.ts"
 
-export const useRoutes = (isAuthenticated: boolean) => {
-    if (isAuthenticated) {
+export const useRoutes = (isAuth: boolean) => {
+   const userId = useAuthStore(store => store.userId)
+
+    if (isAuth && !!userId) {
         return (
             <Routes>
                 <Route path="/"

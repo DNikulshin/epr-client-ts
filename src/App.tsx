@@ -1,33 +1,25 @@
-import { BrowserRouter as Router } from 'react-router-dom'
-import { useRoutes } from './routes'
-import { useAuth } from './hooks/auth.hook'
-import { AuthContext } from './context/AuthContext'
-import { Loader } from './components/Loader'
-import { ToastContainer } from 'react-toastify'
-import { useEffect } from 'react'
+import {BrowserRouter as Router} from 'react-router-dom'
+import {useRoutes} from './routes'
+import {ToastContainer} from 'react-toastify'
 import {useAuthStore} from './store/auth-store'
-
+import {Loader} from "./components/Loader.tsx"
 
 export default function App() {
-    const isAuth  = useAuthStore(state => state.isAuth)
-    const checkAuth  = useAuthStore(state => state.checkAuth)
-  const routes = useRoutes(isAuth)
+    const isAuth = useAuthStore(state => state.isAuth)
+    const loading = useAuthStore(state => state.loading)
+    const routes = useRoutes(isAuth)
 
-  useEffect( () => {
-    checkAuth('ndu', '111')
-  }, [isAuth])
+    if (loading) {
+        return <Loader/>
+    }
 
-//   if (!ready) {
-//       return <Loader/>
-//   }
-
-  return (
-      <Router>
-        <div className="container position-relative">
-            <small className="version-app">v2</small>
+    return (
+        <Router>
+            <div className="container position-relative">
+                <small className="version-app">v_0.1</small>
                 {routes}
-         <ToastContainer position='top-center'/>
-        </div>
-      </Router>
-)
+                <ToastContainer position='top-center'/>
+            </div>
+        </Router>
+    )
 }

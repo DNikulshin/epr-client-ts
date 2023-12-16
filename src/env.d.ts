@@ -2,8 +2,8 @@
 
 interface ImportMetaEnv {
     readonly APP_TITLE: string
-    readonly API_URL: string
-    readonly API_KEY: string
+    readonly VITE_APP_API_URL: string
+    readonly VITE_APP_API_KEY: string
   }
   
   interface ImportMeta {

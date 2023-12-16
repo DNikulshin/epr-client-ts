@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, FC, SetStateAction } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
 enum localStore {
     userId = 'storageUserId'

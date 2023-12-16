@@ -7,7 +7,7 @@ interface userStore {
     getData: () => void
 }
 
-interface userReaponse {
+interface userResponse {
     data: {
         [userId]: Iuser
 
@@ -27,7 +27,7 @@ export interface Iuser {
 
 }
 
-export const useUserStore = create<userStore>((set, get) => ({
+export const useUserStore = create<userStore>((set) => ({
     user: {
         id: null,
         name: '',
@@ -39,12 +39,12 @@ export const useUserStore = create<userStore>((set, get) => ({
     },
     getData: async () => {
         try {
-            const { data: { data } } = await instanceAxios<userReaponse>('/get_data', {
-                // params: {
-                //     cat: 'employee',
-                //     action: 'get_data',
-                //     id: 180
-                // }
+            const { data: { data } } = await instanceAxios<userResponse>('', {
+                params: {
+                    cat: 'employee',
+                    action: 'get_data',
+                    id: 180
+                }
             })
 
             set({ user: data[userId] })
