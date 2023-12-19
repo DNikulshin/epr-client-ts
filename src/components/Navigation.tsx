@@ -1,20 +1,20 @@
 import {Link} from 'react-router-dom'
 
 interface navigationProps {
-    getListItems: () => void
+    onClick: () => void
     buttonTypeText: string,
     linkTo: string
     currentRoute: string
     logout: () => void
 }
 
-export const Navigation = ({getListItems, buttonTypeText, linkTo, currentRoute, logout}: navigationProps) => {
+export const Navigation = ({onClick, buttonTypeText, linkTo, currentRoute, logout}: navigationProps) => {
     return (
         <>
             <div
                 className="d-flex justify-content-center text-center gap-4 align-items-center bg-secondary bg-opacity-50 w-100 flex-nowrap rounded">
                 <Link to={currentRoute} className="btn btn-primary fs-4 my-3 mx-3 btn-hover btn-shadow"
-                      onClick={getListItems}>
+                      onClick={onClick}>
                     <i className="bi bi-arrow-clockwise"/>
                 </Link>
                 <Link to={linkTo}

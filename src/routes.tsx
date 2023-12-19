@@ -10,7 +10,7 @@ import {useAuthStore} from "./store/auth-store.ts"
 export const useRoutes = (isAuth: boolean) => {
    const userId = useAuthStore(store => store.userId)
 
-    if (isAuth && !!userId) {
+    if (!!userId ||  isAuth ) {
         return (
             <Routes>
                 <Route path="/"

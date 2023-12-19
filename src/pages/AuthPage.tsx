@@ -3,18 +3,26 @@ import {useState} from 'react'
 import 'react-toastify/dist/ReactToastify.css'
 import {useAuthStore} from "../store/auth-store.ts"
 import {useNavigate} from 'react-router-dom'
+import {useUserStore} from "../store/user-store.ts";
 
 export const AuthPage = () => {
     const checkAuth = useAuthStore(store => store.checkAuth)
     const isAuth = useAuthStore(store => store.isAuth)
     const [login, setLogin] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+    const userId = useAuthStore(state => state.userId)
     const navigate = useNavigate()
+    const getData = useUserStore(state => state.getData)
 
     const loginHandler = async () => {
         if (!login && !password) return
        checkAuth(login, password).then(() => {
-           if (isAuth) {
+           if (!!userId ||  isAuth ) {
+
+               if(!localStorage.getItem('divisionId')) {
+                   getData()
+               }
+
                navigate('/')
            }
        })

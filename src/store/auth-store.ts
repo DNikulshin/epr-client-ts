@@ -49,16 +49,19 @@ export const useAuthStore = create<authStore>((set, get) => ({
                 localStorage.setItem('UserName', login)
 
                 const {userName} = get()
-                const {data: {id}} = await instanceAxios<responseUserId>('', {
-                    params: {
-                        cat: 'employee',
-                        action: 'get_employee_id',
-                        'data_typer': 'login',
-                        'data_value': userName
-                    }
-                })
-                set({userId: id})
-                localStorage.setItem('userId', JSON.stringify(id))
+                if(!localStorage.getItem('userId')) {
+                    const {data: {id}} = await instanceAxios<responseUserId>('', {
+                        params: {
+                            cat: 'employee',
+                            action: 'get_employee_id',
+                            'data_typer': 'login',
+                            'data_value': userName
+                        }
+                    })
+                    set({userId: id})
+                    localStorage.setItem('userId', JSON.stringify(id))
+                }
+
             }
             set({loading: false})
             const {isAuth} = get()
@@ -77,5 +80,6 @@ export const useAuthStore = create<authStore>((set, get) => ({
         set({isAuth: false})
         localStorage.removeItem('userId')
         localStorage.removeItem('UserName')
+        localStorage.removeItem('divisionId')
     }
 }))
