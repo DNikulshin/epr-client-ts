@@ -1,20 +1,11 @@
-import { create } from 'zustand'
-import { instanceAxios } from '../axios'
+import {create} from 'zustand'
+import {instanceAxios} from '../axios'
 
 interface userStore {
     user: Iuser
     getData: () => void
-    getUserName: (id: number) => Promise<string>
+    getUserName: (id: number | string) => Promise<string>
 }
-
-// interface userResponse {
-//     data: {
-//         userId
-//
-//     }
-//
-//
-// }
 
 export interface Iuser {
     id: string,
@@ -27,9 +18,9 @@ export interface Iuser {
 
 }
 
-export const useUserStore = create<userStore>((set,get) => ({
+export const useUserStore = create<userStore>((set, get) => ({
     user: {
-        id: localStorage.getItem('userId') ?? '',
+        id: localStorage.getItem('userId') || '',
         name: '',
         login: '',
         email: '',
@@ -39,7 +30,7 @@ export const useUserStore = create<userStore>((set,get) => ({
     },
     getData: async () => {
         try {
-            const { data: { data } } = await instanceAxios('', {
+            const {data: {data}} = await instanceAxios('', {
                 params: {
                     cat: 'employee',
                     action: 'get_data',
@@ -47,31 +38,25 @@ export const useUserStore = create<userStore>((set,get) => ({
                 }
             })
             const {id} = get().user
-
-
-            const div = Object.values(data[id]['division']).map(element => element['division_id']).toString()
-            localStorage.setItem('divisionId', div)
-
-            set({ user: data[id]})
-
+            localStorage.setItem('divisionId', Object.keys(data[id]['division'])[0] || '')
+            set({user: data[id]})
         } catch (e) {
             console.log(e)
         }
     },
-    getUserName: async (userId: number) => {
-    try {
-        const {data} = await instanceAxios('', {
-            params: {
-                cat: 'employee',
-                action: 'get_data',
-                id: userId
-            }
-        })
-        console.log(data.data[userId].name)
-        return data.data[userId].name
+    getUserName: async (userId: string | number) => {
+        try {
+            const {data} = await instanceAxios('', {
+                params: {
+                    cat: 'employee',
+                    action: 'get_data',
+                    id: userId
+                }
+            })
+            return data.data[userId].name
 
-    } catch (e) {
-        console.log(e)
+        } catch (e) {
+            console.log(e)
+        }
     }
-}
 }))

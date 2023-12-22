@@ -9,15 +9,18 @@ export interface Iitem {
     customer: Customer
     address: Address
     node: any[]
-    description: string
-    description_short: string
-    author_employee_id: number
-    priceCustom: string
-    volumeCustom: string
+    description?: string
+    description_short?: string
+    author_employee_id?: number
+    priceCustom?: string
+    volumeCustom?: string
     comments?: Comment[]
     additional_data?: additionalDate[]
-    staff?: string
-    history: History[]
+    staff?: {
+        division?: object | undefined
+        employee?: object | undefined
+    }
+    history?: History[]
 }
 
 export interface Type {
@@ -64,7 +67,7 @@ export interface History {
 export interface Comment {
     id: number
     dateAdd: string
-    employee_id: number
+    employee_id: number | string
     comment: string
 }
 

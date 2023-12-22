@@ -8,19 +8,22 @@ export const ClaimsList = () => {
  const listItems: Iitem[] = useDataStore(state => state.listItems)
     const countItems = useDataStore(state => state.countItems)
 
+    const loading = useDataStore(state => state.loading)
+
+    if(loading) {
+        return <div className='text-center mt-5 position-relative' style={{
+            transform: 'translateX(50%)'
+        }}>
+            <span className="loader"></span>
+        </div>
+    }
+
+
     if (!countItems) {
 
         return <>
   
             <h3 className="text-danger text-center mt-5">
-         {/*   <Link */}
-         {/*   to="/" */}
-         {/*   title="Очистить куки!">*/}
-         {/*       <i */}
-         {/*       className="fas fa-cookie-bite text-warning fs-1 ms-3 opacity-50 text-sh text-center" */}
-         {/*       onClick={fetchCookie}*/}
-         {/*       />*/}
-         {/*</Link>*/}
          <br/>
                 Заявок нет!
                 </h3>

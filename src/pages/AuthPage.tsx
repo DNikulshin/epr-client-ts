@@ -7,25 +7,25 @@ import {useUserStore} from "../store/user-store.ts";
 
 export const AuthPage = () => {
     const checkAuth = useAuthStore(store => store.checkAuth)
-    const isAuth = useAuthStore(store => store.isAuth)
+    //const isAuth = useAuthStore(store => store.isAuth)
     const [login, setLogin] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-    const userId = useAuthStore(state => state.userId)
+    //const userId = useAuthStore(state => state.userId)
     const navigate = useNavigate()
     const getData = useUserStore(state => state.getData)
 
-    const loginHandler = async () => {
+    const loginHandler = () => {
         if (!login && !password) return
-       checkAuth(login, password).then(() => {
-           if (!!userId ||  isAuth ) {
-
-               if(!localStorage.getItem('divisionId')) {
-                   getData()
-               }
-
-               navigate('/')
-           }
-       })
+        checkAuth(login, password).then((isAuth) => {
+            if (isAuth) {
+                navigate('/')
+                if (!localStorage.getItem('divisionId')) {
+                    getData()
+                }
+                setLogin('')
+                setPassword('')
+            }
+        })
 
     }
 
@@ -34,7 +34,7 @@ export const AuthPage = () => {
             <div className=" d-flex flex-column auth">
                 <div className="auth-content d-flex flex-column">
                     <h3 className="mb-3">Авторизация в hd-erp</h3>
-                    <div className="d-flex flex-column">
+                    <form className="d-flex flex-column">
                         <div className="mb-3">
                             <input
                                 type="text"
@@ -44,6 +44,7 @@ export const AuthPage = () => {
                                 placeholder="Введите логин"
                                 onChange={(e) => setLogin(e.target.value)}
                                 value={login}
+                                autoComplete="on"
                             />
                         </div>
                         <div className="mb-3">
@@ -54,10 +55,11 @@ export const AuthPage = () => {
                                 placeholder="Введите пароль"
                                 onChange={(e) => setPassword(e.target.value)}
                                 value={password}
+                                autoComplete="on"
                             />
                         </div>
                         <button
-                            type="submit"
+                            type="button"
                             className="btn btn-primary mb-3 btn-shadow"
                             onClick={loginHandler}
                         >
@@ -71,7 +73,7 @@ export const AuthPage = () => {
                         >
                             Регистрация
                         </button> */}
-                    </div>
+                    </form>
                 </div>
 
             </div>

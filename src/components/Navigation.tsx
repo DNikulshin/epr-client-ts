@@ -9,24 +9,34 @@ interface navigationProps {
 }
 
 export const Navigation = ({onClick, buttonTypeText, linkTo, currentRoute, logout}: navigationProps) => {
+
     return (
         <>
             <div
-                className="d-flex justify-content-center text-center gap-4 align-items-center bg-secondary bg-opacity-50 w-100 flex-nowrap rounded">
+                className="d-flex justify-content-around align-items-center bg-secondary bg-opacity-50 flex-nowrap rounded position-sticky">
                 <Link to={currentRoute} className="btn btn-primary fs-4 my-3 mx-3 btn-hover btn-shadow"
                       onClick={onClick}>
                     <i className="bi bi-arrow-clockwise"/>
                 </Link>
                 <Link to={linkTo}
-                      className="d-flex btn btn-sm btn-success btn-outline-success btn-hover text-white fs-6 flex-nowrap btn-shadow">{buttonTypeText}</Link>
+                      className="d-flex btn btn-sm btn-success btn-outline-success btn-hover text-white fs-6 flex-nowrap btn-shadow"
+                >{buttonTypeText}
+                </Link>
+                <Link to="/user" className="btn btn-sm  fs-4"><i className="bi bi-person-bounding-box"></i></Link>
                 <Link
                     className="btn btn-sm btn-danger text-white btn-shadow"
                     to='/login'
                     title="Выйти"
                     onClick={logout}
                 >
-                    Выйти
+                    <i className="bi bi-power"></i>
                 </Link>
+                {/*<Link*/}
+                {/*    className="btn btn-sm text-white btn-shadow"*/}
+                {/*    to='/user'*/}
+                {/*>*/}
+                {/*    <i className="bi bi-person"></i>*/}
+                {/*</Link>*/}
             </div>
         </>
     )
