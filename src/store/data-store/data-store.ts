@@ -5,8 +5,8 @@ import {toast} from 'react-toastify'
 
 interface useDataStoreProps {
     listItems: Iitem[]
-    getItems: () => void
-    userId: number,
+    getItems: (d: dateDoProps) => void
+    userId: number |string,
     countItems: number
     listItemsId: string
     loading: boolean
@@ -14,14 +14,20 @@ interface useDataStoreProps {
     getDataNode: (id: number) => Promise<any>
 }
 
-export const useDataStore = create<useDataStoreProps>((set, get) => ({
+interface dateDoProps {
+    dateDoFrom: number | string | undefined
+    dateDoTo: number | string | undefined
+}
+
+
+export const useDataStore = create<useDataStoreProps>() ((set, get) => ({
     listItems: [],
-    userId: JSON.parse(localStorage.getItem('userId') || '{}'),
+    userId: localStorage.getItem('userId') || '',
     countItems: 0,
     listItemsId: '',
     loading: false,
     error: null,
-    getItems: async () => {
+    getItems: async (dateDo: dateDoProps) => {
         try {
             toast(null)
             set({error: null})
@@ -30,15 +36,15 @@ export const useDataStore = create<useDataStoreProps>((set, get) => ({
                 params: {
                     cat: 'task',
                     action: 'get_list',
-                    'date_do_from': new Date().toLocaleDateString(),
-                    'date_do_to': new Date().toLocaleDateString(),
+                    'date_do_from': dateDo?.dateDoFrom,
+                    'date_do_to': dateDo?.dateDoTo,
                     //'employee_id': get().userId
                     'division_id': localStorage.getItem('divisionId'),
+                    'order_by ': 'date_change'
                 }
             })
             set({countItems: data.data.count})
             set({listItemsId: data.data.list})
-            set({})
             const showItems = await instanceAxios('', {
                 params: {
                     cat: 'task',
@@ -46,7 +52,6 @@ export const useDataStore = create<useDataStoreProps>((set, get) => ({
                     id: get().listItemsId
                 }
             })
-            console.log(showItems.data.data, 'showItems')
             set({listItems: Object.values(showItems.data.data)})
 
             set({loading: false})
@@ -73,9 +78,12 @@ export const useDataStore = create<useDataStoreProps>((set, get) => ({
                 }
             })
             return data.data[Object.keys(data.data)[0]]['coordinates']
+
         } catch (e) {
             if (e instanceof Error) {
                 console.log(e)
+                toast(e.message)
+                set({loading: false})
             }
         }
     },

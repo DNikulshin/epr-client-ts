@@ -2,7 +2,6 @@ import {CommentUser} from "./Comment.tsx";
 import { Comment} from "../store/data-store/types.ts";
 
 export const Comments = (comments: Comment[]) => {
-    console.log(comments)
     return (
         <>
             <strong>Комменты: <br/></strong>

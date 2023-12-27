@@ -1,25 +1,25 @@
 import {create} from 'zustand'
-import {instanceAxios} from '../axios'
+import {instanceAxios} from '../../axios.ts'
 import {toast} from 'react-toastify'
-
-///import loading = toast.loading;
 
 interface authStore {
     isAuth: boolean
     responseResult: string | null
     userName: string | null
     userId: number | string | null
+    divisionId: number | string | null
     checkAuth: (login: string, password: string) => Promise<boolean | undefined>
     logout: () => void
     loading: boolean
     error: string | null
 }
 
-export const useAuthStore = create<authStore>((set, get) => ({
+export const useAuthStore = create<authStore>() ((set, get) => ({
     isAuth: false,
     responseResult: null,
-    userName: localStorage.getItem('UserName'),
-    userId: localStorage.getItem('userId') || '',
+    userName: '',
+    userId: '',
+    divisionId: '',
     loading: false,
     error: null,
     checkAuth: async (login: string = '', pass: string = ''): Promise<boolean | undefined> => {
@@ -38,10 +38,10 @@ export const useAuthStore = create<authStore>((set, get) => ({
             if (Result === 'OK') {
                 set({isAuth: true})
                 set({userName: login})
-                localStorage.setItem('UserName', login)
+                localStorage.setItem('userName', login)
 
                 const {userName} = get()
-                if(!localStorage.getItem('userId')) {
+                if (!localStorage.getItem('userId')) {
                     const {data: {id}} = await instanceAxios('', {
                         params: {
                             cat: 'employee',
@@ -51,7 +51,22 @@ export const useAuthStore = create<authStore>((set, get) => ({
                         }
                     })
                     set({userId: id})
-                    localStorage.setItem('userId', JSON.stringify(id))
+                    localStorage.setItem('userId', id)
+                }
+                if (!localStorage.getItem('divisionId')) {
+                    const {data: {data}} = await instanceAxios('', {
+                        params: {
+                            cat: 'employee',
+                            action: 'get_data',
+                            id: get().userId
+                        }
+
+                    })
+                    const {userId} = get()
+                    if (userId) {
+                        localStorage.setItem('divisionId', Object.keys(data[userId]['division'])[0] || '')
+                    }
+
                 }
             }
 
@@ -70,8 +85,11 @@ export const useAuthStore = create<authStore>((set, get) => ({
     },
     logout: () => {
         set({isAuth: false})
+        set({userId: null})
+        set({userName: null})
+        set({divisionId: null})
         localStorage.removeItem('userId')
-        localStorage.removeItem('UserName')
+        localStorage.removeItem('userName')
         localStorage.removeItem('divisionId')
     }
 }))

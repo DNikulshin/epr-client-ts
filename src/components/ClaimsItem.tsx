@@ -2,9 +2,9 @@ import {MouseEventHandler, useEffect, useState} from 'react'
 import {CSSTransition} from 'react-transition-group'
 import {Iitem} from "../store/data-store/types.ts"
 import {Comments} from "./Comments.tsx";
-import {useDataStore} from "../store/data-store/data-store.ts";
+import {useDataStore} from "../store/data-store/data-store.ts"
 import {MapItem} from "./MapItem.tsx";
-import {useUserStore} from "../store/user-store.ts";
+import {useUserStore} from "../store/user-store/user-store.ts"
 
 export const ClaimsItem = (props: Iitem) => {
     const [employee, setEmployee] = useState('')
@@ -82,12 +82,12 @@ export const ClaimsItem = (props: Iitem) => {
                         : 'accordion-button btn-accordion collapsed btn-accordion-active'}
                             type="button"
                     >
-                        <div className="content-btn d-flex flex-wrap align-items-center">
+                        <div className="content-btn d-flex flex-wrap align-items-center position-relative pe-4">
                             <div className="d-flex align-items-center justify-content-between w-100">
                                 <small className=" me-3 d-flex">#{index + 1}</small>
                                 <div className="btn btn-hover fs-4 d-flex"
                                      onClick={() => getMap(address.addressId)}>
-                                    <i className="bi bi-geo-alt-fill"></i>
+                                    <i className="bi bi-geo-alt-fill fs-5"></i>
                                 </div>
                                 <div className="d-flex flex-wrap  align-items-center">
                                     <strong
@@ -106,13 +106,26 @@ export const ClaimsItem = (props: Iitem) => {
                                 </div>
                             </div>
                             <br/>
-                            <hr className="w-100"/>
+                            <hr className="w-75"/>
                             <div>&nbsp;Адрес:&nbsp;{address?.text}</div>
                             <div><strong>&nbsp;Назначено:&nbsp;</strong><span
                                 className="text-bg-info text-danger">{date?.todo}</span></div>
-                            <div>&nbsp;Статус:&nbsp;<span className="text-bg-success">{state?.name}</span></div>
+                            <div>&nbsp;Статус:&nbsp;<span className={state?.id === 1 ? "text-bg-danger opacity-75": "text-bg-success"}>{state?.name}</span></div>
                             <div>&nbsp;Тип:&nbsp;{type?.name}&nbsp;</div>
-                            <hr className="w-100"/>
+                            {open ?
+                                <div
+                                    className="arrow-toggle"
+                                    onClick={handleOpen}
+                                >
+                                    <i className="bi bi-chevron-up fs-3 "></i>
+                                </div>
+                                : <div className="arrow-toggle"
+                                       onClick={handleOpen}
+                                >
+                                    <i className="bi bi-chevron-down fs-3"></i>
+                                </div>
+                            }
+                            <hr className="w-75"/>
                             <div onClick={(e => e.stopPropagation())}>
                                 {additional_data && Object.values(additional_data).map(el => (
 
@@ -129,7 +142,7 @@ export const ClaimsItem = (props: Iitem) => {
                                         </div> : false
                                 ))}
                             </div>
-                            <hr className="w-100"/>
+                            <hr className="w-75"/>
                             <small className="text-shadow">{employee && employee}</small>
 
                         </div>
@@ -137,14 +150,14 @@ export const ClaimsItem = (props: Iitem) => {
                 </div>
                 <CSSTransition in={open} classNames="show-body" timeout={300} unmountOnExit>
                     <>
-                        <div className="accordion-body mt-2">
+                        <div className="accordion-body mt-2 text-wrap world-break">
                             <div><strong>Дата создания: </strong>{date?.create}</div>
                             <hr/>
                             <div><strong>Назначено: </strong>{date?.todo}</div>
                             <hr/>
                             <div><strong>Абонент: </strong>{customer?.fullName}</div>
                             <hr/>
-                            <div><strong>Описание: </strong> <br/>{description?.replace(/(<(\/?[^>]+)>)/g, '')}</div>
+                            <div className="text-wrap"><strong>Описание: </strong> <br/>{description?.replace(/(<(\/?[^>]+)>)/g, '')}</div>
                             <hr/>
                             {comments && <Comments {...comments}/>}
                             <hr/>

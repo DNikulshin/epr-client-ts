@@ -1,43 +1,122 @@
-import {Link} from 'react-router-dom'
+import {Link, useLocation} from 'react-router-dom'
+import {useEffect, useState} from "react";
+import moment from "moment/moment";
+import {useDataStore} from "../store/data-store/data-store.ts";
+import Select from "react-select";
 
 interface navigationProps {
-    onClick: () => void
-    buttonTypeText: string,
-    linkTo: string
-    currentRoute: string
     logout: () => void
 }
+export interface IOptions {
+    label?: string
+    value?: {
+        dateDoFrom?: number | string | undefined,
+        dateDoTo?: number | string | undefined
+    }
+}
 
-export const Navigation = ({onClick, buttonTypeText, linkTo, currentRoute, logout}: navigationProps) => {
+const options: IOptions[] = [
+    {
+        label: 'Заявки сегодня',
+        value: {
+            dateDoFrom: moment().format('DD.MM.YYYY'),
+            dateDoTo: moment().format('DD.MM.YYYY')
+        }
+    },
+    {
+        label: 'Заявки завтра',
+        value: {
+            dateDoFrom: moment().add(1, 'days').format('DD.MM.YYYY'),
+            dateDoTo: moment().add(1, 'days').format('DD.MM.YYYY')
+        }
+    },
+    {
+        label: 'Заявки вчера',
+        value: {
+            dateDoFrom: moment().subtract(1, 'days').format('DD.MM.YYYY'),
+            dateDoTo: moment().subtract(1, 'days').format('DD.MM.YYYY')
+        }
+    },
+    {
+        label: 'Заявки в этом месяце',
+        value: {
+            dateDoFrom: moment().startOf('month').format('DD.MM.YYYY'),
+            dateDoTo:  moment().endOf('month').format('DD.MM.YYYY')
+        }
+    }
+]
+
+
+
+export const Navigation = ({logout}: navigationProps) => {
+    const [position, setPosition] = useState(window?.scrollY)
+    const [visible, setVisible] = useState(true)
+    const [selectedOption, setSelectedOption] = useState<IOptions>(options[0])
+    const getItems = useDataStore(state => state.getItems)
+    const location = useLocation()
+
+    useEffect(() => {
+        if(selectedOption.value) {
+            getItems({dateDoTo: selectedOption?.value?.dateDoTo, dateDoFrom: selectedOption?.value?.dateDoFrom})
+        }
+
+
+    }, [getItems, selectedOption])
+
+
+
+    useEffect(()=> {
+        const handleScroll = () => {
+            const moving = window?.scrollY
+
+            setVisible(position > moving);
+            setPosition(moving)
+        };
+        window.addEventListener("scroll", handleScroll)
+        return(() => {
+            window.removeEventListener("scroll", handleScroll)
+        })
+    })
+
+    const cls = visible ? "visible-header" : "hidden-header"
 
     return (
         <>
-            <div
-                className="d-flex justify-content-around align-items-center bg-secondary bg-opacity-50 flex-nowrap rounded position-sticky">
-                <Link to={currentRoute} className="btn btn-primary fs-4 my-3 mx-3 btn-hover btn-shadow"
-                      onClick={onClick}>
-                    <i className="bi bi-arrow-clockwise"/>
-                </Link>
-                <Link to={linkTo}
-                      className="d-flex btn btn-sm btn-success btn-outline-success btn-hover text-white fs-6 flex-nowrap btn-shadow"
-                >{buttonTypeText}
-                </Link>
-                <Link to="/user" className="btn btn-sm  fs-4"><i className="bi bi-person-bounding-box"></i></Link>
-                <Link
-                    className="btn btn-sm btn-danger text-white btn-shadow"
-                    to='/login'
-                    title="Выйти"
-                    onClick={logout}
-                >
-                    <i className="bi bi-power"></i>
-                </Link>
-                {/*<Link*/}
-                {/*    className="btn btn-sm text-white btn-shadow"*/}
-                {/*    to='/user'*/}
-                {/*>*/}
-                {/*    <i className="bi bi-person"></i>*/}
-                {/*</Link>*/}
-            </div>
+            <header
+                className={"d-flex flex-column justify-content-around align-items-center bg-secondary bg-opacity-50 flex-nowrap rounded position-sticky top-0 p-2 mb-2" + " " + cls}
+                style={{
+                    zIndex: 9999
+                }}
+            >
+                <div className='d-flex align-items-center gap-5 mb-3'>
+                    <button className="btn btn-primary fs-5 btn-hover btn-shadow"
+                            onClick={() => getItems({dateDoTo: selectedOption?.value?.dateDoTo, dateDoFrom: selectedOption?.value?.dateDoFrom})}>
+                        <i className="bi bi-arrow-clockwise"/>
+                    </button>
+                    <Link to="/"
+                          className="d-flex btn btn-sm bg-primary-subtle btn-hover btn-outline-success fs-4 flex-nowrap btn-shadow"
+                    ><i className="bi bi-house"></i>
+                    </Link>
+                    <Link to="/user" className="btn btn-sm  fs-4 btn-shadow bg-success btn-hover"><i className="bi bi-person-bounding-box"></i></Link>
+                    <Link
+                        className="btn btn-sm btn-danger text-white btn-shadow btn-hover"
+                        to='/login'
+                        title="Выйти"
+                        onClick={logout}
+                    >
+                        <i className="bi bi-power"></i>
+                    </Link>
+                </div>
+
+                {location.pathname === '/'
+                    && <Select
+                    defaultValue={selectedOption}
+                    onChange={(newValue) => setSelectedOption(newValue ?? {})}
+                    options={options}
+                    className="d=flex w-100"
+                />}
+
+            </header>
         </>
     )
 }

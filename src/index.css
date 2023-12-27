@@ -328,3 +328,28 @@ body {
 .bi-geo-alt-fill::before {
     color: brown !important;
 }
+
+.accordion-button::after {
+   display: none!important;
+}
+
+.arrow-toggle {
+    position: absolute!important;
+    right: 0!important;
+    transition: all .5s!important;
+}
+
+
+.visible-header {
+    top: 0!important;
+    transition: top 0.4s ease-out!important;
+}
+
+.hidden-header {
+    top: -130px!important;
+    transition: top 0.4s ease-out!important;
+}
+
+.world-break {
+    word-break: break-word!important;
+}

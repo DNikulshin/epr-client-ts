@@ -1,45 +1,32 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
-import { ClaimsPage } from './pages/ClaimsPage'
-import { AuthPage } from './pages/AuthPage'
-// import { AllClaimsPage } from './pages/AllClaimsPage'
-// import { MapPage } from './pages/MapPage'
-// import { DetailPage } from './pages/DetailPage'
-import { UserPage } from './pages/UserPage'
-import {useAuthStore} from "./store/auth-store.ts"
+import {Navigate, Route, Routes} from 'react-router-dom'
+import {ClaimsPage} from './pages/ClaimsPage'
+import {AuthPage} from './pages/AuthPage'
+import {UserPage} from './pages/UserPage'
+import {MainLayout} from "./layouts/MainLayout.tsx"
+import {EmptyLayout} from "./layouts/EmptyLayout.tsx";
 
 export const useRoutes = (isAuth: boolean) => {
-   const userId = useAuthStore(store => store.userId)
 
-    if (!!userId || isAuth) {
+    if (localStorage.getItem('userId') || isAuth) {
         return (
             <Routes>
-                <Route path="/"
-                       element={<ClaimsPage/>}
-                >
-                </Route>
-                <Route path="/login"
-                       element={<AuthPage/>}
-                >
-                </Route>
-                {/*<Route path="/all"*/}
-                {/*       element={<AllClaimsPage/>}*/}
-                {/*>*/}
-                {/*      </Route>*/}
-                <Route path="/user"
-                       element={<UserPage/>}
-                >
-                </Route>
-                {/*<Route path="/coordinates/:id"*/}
-                {/*       element={<MapPage/>}*/}
-                {/*>*/}
-                {/*</Route>*/}
-                {/*<Route path="/detail/:id"*/}
-                {/*       element={<DetailPage/>}*/}
-                {/*>*/}
-                {/*</Route>*/}
-                <Route path="*"
-                       element={<Navigate to="/" replace />}
-                >
+                <Route path="/" element={<MainLayout/>}>
+                    <Route index
+                           element={<ClaimsPage/>}
+                    >
+                    </Route>
+                    <Route path="login"
+                           element={<AuthPage/>}
+                    >
+                    </Route>
+                    <Route path="user"
+                           element={<UserPage/>}
+                    >
+                    </Route>
+                    <Route path="*"
+                           element={<Navigate to="/" replace/>}
+                    >
+                    </Route>
                 </Route>
             </Routes>
         )
@@ -47,13 +34,15 @@ export const useRoutes = (isAuth: boolean) => {
 
     return (
         <Routes>
-            <Route path="/login"
-                   element={<AuthPage/>}
-            >
-            </Route>
-            <Route path="*"
-                   element={<Navigate to="/login" replace/>}
-            >
+            <Route path="/" element={<EmptyLayout/>}>
+                <Route path="login"
+                       element={<AuthPage/>}
+                >
+                </Route>
+                <Route path="*"
+                       element={<Navigate to="login" replace/>}
+                >
+                </Route>
             </Route>
         </Routes>
     )

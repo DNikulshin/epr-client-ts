@@ -33,7 +33,9 @@ export const ClaimsList = () => {
     return (
         <>
             { countItems &&
-                listItems.map((item, idx) => {
+                listItems
+                    .sort((a, b) => a.date.todo.localeCompare(b.date.todo))
+                    .map((item, idx) => {
                 return (
                     <div className="accordion d-flex flex-column my-2" key={item.id}>
                         <ClaimsItem {...item} index={idx}/>

@@ -1,6 +1,6 @@
 import { useEffect, FC } from 'react'
-import { useUserStore } from '../store/user-store'
-import { Iuser } from '../store/user-store'
+import { useUserStore } from '../store/user-store/user-store.ts'
+import { Iuser } from '../store/user-store/user-store.ts'
 
 export const UserPage: FC = () => {
     const {id, name, login, last_activity_time, email, phone, position} = useUserStore<Iuser>((state) => state.user)

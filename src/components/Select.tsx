@@ -1,27 +1,17 @@
-// const Select = props => {
-//     const htmlFor = `${props.label}-${Math.random()}`
-//     return (
-//         <div className="d-select">
-//             <label htmlFor={htmlFor}>{props.label}</label>
-//             <select
-//                 id={htmlFor}
-//                 value={props.value}
-//                 onChange={props.onChange}
-//             >
-//                 {props.options.map((option, index) => {
-//                     return (
-//                         <option
-//                             value={option.value}
-//                             key={option + index}
-//                         >
-//                             {option.text}
-//                         </option>
-//                     )
-//                 })}
-//
-//             </select>
-//         </div>
-//     )
-// }
-//
-// export default Select
+import Select from 'react-select'
+
+interface OptionsProps {
+    value: string
+    label?: string
+
+}
+
+export const CustomSelect = (options: OptionsProps[]) => {
+    return (
+        <div className="d-select">
+            <Select options={options}/>
+        </div>
+    )
+}
+
+export default Select

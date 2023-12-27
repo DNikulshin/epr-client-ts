@@ -1,5 +1,5 @@
 import {create} from 'zustand'
-import {instanceAxios} from '../axios'
+import {instanceAxios} from '../../axios.ts'
 
 interface userStore {
     user: Iuser
@@ -18,7 +18,7 @@ export interface Iuser {
 
 }
 
-export const useUserStore = create<userStore>((set, get) => ({
+export const useUserStore = create<userStore>() ((set, get) => ({
     user: {
         id: localStorage.getItem('userId') || '',
         name: '',
@@ -38,7 +38,6 @@ export const useUserStore = create<userStore>((set, get) => ({
                 }
             })
             const {id} = get().user
-            localStorage.setItem('divisionId', Object.keys(data[id]['division'])[0] || '')
             set({user: data[id]})
         } catch (e) {
             console.log(e)

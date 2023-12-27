@@ -1,5 +1,5 @@
 import {Comment} from "../store/data-store/types.ts";
-import {useUserStore} from "../store/user-store.ts";
+import {useUserStore} from "../store/user-store/user-store.ts";
 import {useEffect, useState} from "react";
 
 export const CommentUser= (commentItem : Comment) => {
