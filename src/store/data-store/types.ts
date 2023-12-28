@@ -1,8 +1,8 @@
 export interface Iitem {
     index: number
     id: number
-    parentTaskId: number
-    priority: number
+    parentTaskId?: number
+    priority?: number
     type: Type
     date: Date
     state: State

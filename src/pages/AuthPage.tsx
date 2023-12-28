@@ -1,21 +1,35 @@
-import {useState} from 'react'
+import {ChangeEventHandler, FormEventHandler, useState} from 'react'
 
 import 'react-toastify/dist/ReactToastify.css'
 import {useAuthStore} from "../store/auth-store/auth-store.ts"
-import {useNavigate} from 'react-router-dom'
+import {useNavigate} from "react-router-dom"
+import {IformData} from "../store/auth-store/auth-store.ts";
 
 export const AuthPage = () => {
     const checkAuth = useAuthStore(store => store.checkAuth)
-    const [login, setLogin] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
+    const [formValue, setFormValue] = useState<IformData>({login: '', pass: ''})
+
     //const userId = useAuthStore(state => state.userId)
     const navigate = useNavigate()
-    const loginHandler =  () => {
-        if (!login && !password) return
-        checkAuth(login, password).then((isAuth) => {
-            if (isAuth) {
-                navigate('/')
-            }
+
+    const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+        e.preventDefault()
+        const loginFormData = new FormData()
+        loginFormData.append("username", formValue.login)
+        loginFormData.append("password", formValue.pass)
+        if (!formValue.login && !formValue.pass) return
+        await checkAuth(formValue)
+            .then((data) => {
+                if (data) {
+                    navigate('/')
+                }
+            })
+    }
+
+    const changeHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
+        setFormValue({
+            ...formValue,
+            [e.target.name]: e.target.value
         })
 
     }
@@ -25,7 +39,7 @@ export const AuthPage = () => {
             <div className=" d-flex flex-column auth">
                 <div className="auth-content d-flex flex-column">
                     <h3 className="mb-3">Авторизация в hd-erp</h3>
-                    <form className="d-flex flex-column">
+                    <form className="d-flex flex-column" onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <input
                                 type="text"
@@ -33,8 +47,8 @@ export const AuthPage = () => {
                                 name="login"
                                 aria-describedby="loginHelp"
                                 placeholder="Введите логин"
-                                onChange={(e) => setLogin(e.target.value)}
-                                value={login}
+                                onChange={changeHandler}
+                                value={formValue.login}
                                 autoComplete="on"
                             />
                         </div>
@@ -42,17 +56,16 @@ export const AuthPage = () => {
                             <input
                                 type="password"
                                 className="form-control input-shadow"
-                                name="password"
+                                name="pass"
                                 placeholder="Введите пароль"
-                                onChange={(e) => setPassword(e.target.value)}
-                                value={password}
+                                onChange={changeHandler}
+                                value={formValue.pass}
                                 autoComplete="on"
                             />
                         </div>
                         <button
-                            type="button"
+                            type="submit"
                             className="btn btn-primary mb-3 btn-shadow"
-                            onClick={loginHandler}
                         >
                             Войти
                         </button>

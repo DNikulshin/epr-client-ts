@@ -16,7 +16,7 @@ export const ClaimsPage = () => {
 
     return (
         <>
-            {!loading && countItems &&
+            {!loading && countItems > 0 &&
                 <div className="bg-light p-2 text-center">Всего:&nbsp;<strong
                     className="text-success mx-4">{countItems}</strong>
                 </div>

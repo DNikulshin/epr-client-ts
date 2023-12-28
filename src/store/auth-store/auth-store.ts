@@ -8,37 +8,44 @@ interface authStore {
     userName: string | null
     userId: number | string | null
     divisionId: number | string | null
-    checkAuth: (login: string, password: string) => Promise<boolean | undefined>
+    checkAuth: (formData: IformData) => Promise<boolean | undefined>
     logout: () => void
     loading: boolean
     error: string | null
+}
+
+export interface IformData {
+    login: string,
+    pass: string
 }
 
 export const useAuthStore = create<authStore>() ((set, get) => ({
     isAuth: false,
     responseResult: null,
     userName: '',
-    userId: '',
+    userId: localStorage.getItem('userId'),
     divisionId: '',
     loading: false,
     error: null,
-    checkAuth: async (login: string = '', pass: string = ''): Promise<boolean | undefined> => {
+    checkAuth: async (formData: IformData): Promise<boolean | undefined> => {
         try {
             toast(null)
             set({error: null})
             set({loading: true})
             const {data: {Result}} = await instanceAxios('', {
+                data: formData,
                 params: {
                     cat: 'employee',
-                    action: 'check_pass',
-                    login,
-                    pass
+                    action: 'check_pass'
+                },
+                headers: {
+                    'Content-Type': 'multipart/form-data'
                 }
             })
             if (Result === 'OK') {
                 set({isAuth: true})
-                set({userName: login})
-                localStorage.setItem('userName', login)
+                set({userName: formData.login})
+                localStorage.setItem('userName', formData.login)
 
                 const {userName} = get()
                 if (!localStorage.getItem('userId')) {

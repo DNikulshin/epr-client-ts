@@ -6,12 +6,18 @@ import {toast} from 'react-toastify'
 interface useDataStoreProps {
     listItems: Iitem[]
     getItems: (d: dateDoProps) => void
-    userId: number |string,
+    userId: number | string,
     countItems: number
     listItemsId: string
     loading: boolean
     error: string | null
-    getDataNode: (id: number) => Promise<any>
+    getCoordinates: (id: number) => Promise<Coordinates>
+}
+
+
+interface Coordinates {
+    lat: number
+    lon: number
 }
 
 interface dateDoProps {
@@ -20,7 +26,7 @@ interface dateDoProps {
 }
 
 
-export const useDataStore = create<useDataStoreProps>() ((set, get) => ({
+export const useDataStore = create<useDataStoreProps>()((set, get) => ({
     listItems: [],
     userId: localStorage.getItem('userId') || '',
     countItems: 0,
@@ -45,6 +51,7 @@ export const useDataStore = create<useDataStoreProps>() ((set, get) => ({
             })
             set({countItems: data.data.count})
             set({listItemsId: data.data.list})
+
             const showItems = await instanceAxios('', {
                 params: {
                     cat: 'task',
@@ -52,8 +59,12 @@ export const useDataStore = create<useDataStoreProps>() ((set, get) => ({
                     id: get().listItemsId
                 }
             })
-            set({listItems: Object.values(showItems.data.data)})
 
+            if (get().countItems > 1) {
+                set({listItems: Object.values(showItems.data.data)})
+            } else {
+                set({listItems: [showItems.data.data]})
+            }
             set({loading: false})
 
         } catch (e) {
@@ -68,16 +79,28 @@ export const useDataStore = create<useDataStoreProps>() ((set, get) => ({
 
     },
 
-    getDataNode: async (id: number) => {
+    getCoordinates: async (id: number) => {
         try {
+
+           // const getBuildingId = await instanceAxios('', {
+               // params: {
+               //     cat: 'address',
+                   // action: 'get',
+              //      id
+             //   }
+           // })
+           // console.log(Object.keys(getBuildingId.data?.Data)[0], 'getBuildingId')
+           // const  billingId = Object.keys(data.data)[0]
+
             const {data} = await instanceAxios('', {
                 params: {
                     cat: 'node',
                     action: 'get',
-                   'address_id': id
+                    'address_id': id
                 }
             })
-            return data.data[Object.keys(data.data)[0]]['coordinates']
+
+          return data.data[Object.keys(data.data)[0]]['coordinates']
 
         } catch (e) {
             if (e instanceof Error) {

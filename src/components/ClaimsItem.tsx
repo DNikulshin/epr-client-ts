@@ -10,7 +10,7 @@ export const ClaimsItem = (props: Iitem) => {
     const [employee, setEmployee] = useState('')
     const [switchComponent, setSwitchComponent] = useState(false)
     const [coordinates, setCoordinates] = useState({lat: 0, lon: 0})
-    const getCoordinates = useDataStore(state => state.getDataNode)
+    const getCoordinates = useDataStore(state => state.getCoordinates)
     const getUserName = useUserStore(state => state.getUserName)
     const regExpSortTel = /(\+7|8)[- _]*\(?[- _]*(\d{3}[- _]*\)?([- _]*\d){7}|\d\d[- _]*\d\d[- _]*\)?([- _]*\d){6})/g
     const {
@@ -86,7 +86,7 @@ export const ClaimsItem = (props: Iitem) => {
                             <div className="d-flex align-items-center justify-content-between w-100">
                                 <small className=" me-3 d-flex">#{index + 1}</small>
                                 <div className="btn btn-hover fs-4 d-flex"
-                                     onClick={() => getMap(address.addressId)}>
+                                     onClick={() => getMap(address?.addressId)}>
                                     <i className="bi bi-geo-alt-fill fs-5"></i>
                                 </div>
                                 <div className="d-flex flex-wrap  align-items-center">
@@ -151,13 +151,16 @@ export const ClaimsItem = (props: Iitem) => {
                 <CSSTransition in={open} classNames="show-body" timeout={300} unmountOnExit>
                     <>
                         <div className="accordion-body mt-2 text-wrap world-break">
+                            <div className="mb-1"><strong>id: </strong>{id}</div>
+                            <hr/>
                             <div><strong>Дата создания: </strong>{date?.create}</div>
                             <hr/>
                             <div><strong>Назначено: </strong>{date?.todo}</div>
                             <hr/>
                             <div><strong>Абонент: </strong>{customer?.fullName}</div>
                             <hr/>
-                            <div className="text-wrap"><strong>Описание: </strong> <br/>{description?.replace(/(<(\/?[^>]+)>)/g, '')}</div>
+                            <div className="text-wrap"><strong>Описание: </strong>
+                                <br/>{description?.replace(/(<(\/?[^>]+)>)/g, '')}</div>
                             <hr/>
                             {comments && <Comments {...comments}/>}
                             <hr/>

@@ -83,7 +83,7 @@ export const Navigation = ({logout}: navigationProps) => {
     return (
         <>
             <header
-                className={"d-flex flex-column justify-content-around align-items-center bg-secondary bg-opacity-50 flex-nowrap rounded position-sticky top-0 p-2 mb-2" + " " + cls}
+                className={"d-flex flex-column justify-content-around align-items-center bg-secondary bg-opacity-75 flex-nowrap rounded position-sticky w-100 top-0 p-2 mb-2" + " " + cls}
                 style={{
                     zIndex: 9999
                 }}
