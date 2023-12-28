@@ -110,7 +110,7 @@ export const ClaimsItem = (props: Iitem) => {
                             <div>&nbsp;Адрес:&nbsp;{address?.text}</div>
                             <div><strong>&nbsp;Назначено:&nbsp;</strong><span
                                 className="text-bg-info text-danger">{date?.todo}</span></div>
-                            <div>&nbsp;Статус:&nbsp;<span className={state?.id === 1 ? "text-bg-danger opacity-75": "text-bg-success"}>{state?.name}</span></div>
+                            <div>&nbsp;Статус:&nbsp;<span className={state?.id === 1 ? "text-bg-danger": "text-bg-success"}>{state?.name}</span></div>
                             <div>&nbsp;Тип:&nbsp;{type?.name}&nbsp;</div>
                             {open ?
                                 <div

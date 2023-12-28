@@ -1,18 +1,13 @@
-import {ClaimsItem} from './ClaimsItem'
 import {useDataStore} from "../store/data-store/data-store.ts"
-
-
-import {Iitem} from "../store/data-store/types.ts"
+import {Pagination} from "./Pagination.tsx"
 
 export const ClaimsList = () => {
-    const listItems: Iitem[] = useDataStore(state => state.listItems)
     const countItems = useDataStore(state => state.countItems)
-
     const loading = useDataStore(state => state.loading)
 
     if (loading) {
         return <div className='text-center mt-5 position-relative' style={{
-            transform: 'translateX(50%)'
+            transform: 'translateX(40%)'
         }}>
             <span className="loader"></span>
         </div>
@@ -29,21 +24,10 @@ export const ClaimsList = () => {
             </h3>
         </>
     }
-    console.log(listItems)
+
     return (
         <>
-            {countItems &&
-                listItems
-                    .sort((a, b) => a.date?.todo.localeCompare(b.date?.todo))
-                    .map((item, idx) => {
-                        return (
-                            <div className="accordion d-flex flex-column my-2" key={item.id}>
-                                {<ClaimsItem {...item} index={idx}/>}
-                            </div>
-                        )
-                    })
-
-            }
+            <Pagination itemsPerPage={5}/>
         </>
     )
 }

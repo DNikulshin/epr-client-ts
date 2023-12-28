@@ -8,7 +8,7 @@ export const ClaimsPage = () => {
 
 
     const handleClick = () => {
-        const countClaim = document.querySelector('.container')
+        const countClaim = document.body
         if (countClaim) {
             countClaim.scrollIntoView({behavior: 'smooth'})
         }
@@ -22,14 +22,12 @@ export const ClaimsPage = () => {
                 </div>
             }
             <ClaimsList/>
-
             {!loading && countItems >= 3 &&
                 <div className="text-center">
                     <button type="button" className="btn btn-primary my-3 btn-hover" onClick={handleClick}><i
                         className="bi bi-arrow-up"/></button>
                 </div>
             }
-
         </>
     )
 }

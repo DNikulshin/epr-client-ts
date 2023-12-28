@@ -353,3 +353,10 @@ body {
 .world-break {
     word-break: break-word!important;
 }
+
+.active-page {
+    color: white!important;
+    background: seagreen!important;
+    padding: .5rem!important;
+    font-weight: bold!important;
+}

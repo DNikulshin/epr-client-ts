@@ -13,15 +13,15 @@ export default function App() {
     const {isOffline} = useNavigatorOnline()
 
     if (isOffline) {
-        toast('No Internet!')
+        toast('Нет интернет соединения!')
 
         return (
-            <div className="d-flex justify-content-center align-items-center w-100 vh-100 flex-column">
+            <div className="d-flex justify-content-center align-items-center w-100 vh-100 flex-column text-center">
                 <ToastContainer position='top-center'/>
                 <img src={noInternet} alt="No Internet" className="mb-5" style={{
                     maxWidth: '150px'
                 }}/>
-                <button onClick={() => window.location.reload()} className="btn btn-outline-primary">Reboot</button>
+                <button onClick={() => window.location.reload()} className="btn btn-outline-primary">Обновить</button>
             </div>
             )
     }
