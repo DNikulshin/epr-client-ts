@@ -63,7 +63,11 @@ export const ClaimsItem = (props: Iitem) => {
             }}>
                 <MapItem coordinates={coordinates}/>
                 <button onClick={() => setSwitchComponent(false)}>
-                    <i className="bi bi-arrow-return-left"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         className="bi bi-arrow-return-left" viewBox="0 0 16 16">
+                        <path fillRule="evenodd"
+                              d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5"/>
+                    </svg>
                 </button>
             </div>
         }
@@ -78,7 +82,7 @@ export const ClaimsItem = (props: Iitem) => {
                 }}>
                     <button
                         className={!open
-                        ? 'accordion-button btn-accordion'
+                            ? 'accordion-button btn-accordion'
                         : 'accordion-button btn-accordion collapsed btn-accordion-active'}
                             type="button"
                     >
@@ -87,12 +91,16 @@ export const ClaimsItem = (props: Iitem) => {
                                 <small className=" me-3 d-flex">#{index + 1}</small>
                                 <div className="btn btn-hover fs-4 d-flex"
                                      onClick={() => getMap(address?.addressId)}>
-                                    <i className="bi bi-geo-alt-fill fs-5"></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                         className="bi bi-geo-alt-fill text-danger" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                                    </svg>
                                 </div>
                                 <div className="d-flex flex-wrap  align-items-center">
                                     <strong
                                         className="text-secondary d-flex">
-                                        <div className="me-1"> id:</div>
+                                    <div className="me-1"> id:</div>
                                         &nbsp;</strong>
                                     <div className="btn btn-primary text-white d-flex"
                                          onClick={handleOpen}
@@ -117,12 +125,20 @@ export const ClaimsItem = (props: Iitem) => {
                                     className="arrow-toggle"
                                     onClick={handleOpen}
                                 >
-                                    <i className="bi bi-chevron-up fs-3 "></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                         className="bi bi-chevron-up" viewBox="0 0 16 16">
+                                        <path fillRule="evenodd"
+                                              d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                                    </svg>
                                 </div>
                                 : <div className="arrow-toggle"
                                        onClick={handleOpen}
                                 >
-                                    <i className="bi bi-chevron-down fs-3"></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                        className="bi bi-chevron-down fs-3" viewBox="0 0 16 16">
+                                        <path fillRule="evenodd"
+                                              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
                                 </div>
                             }
                             <hr className="w-75"/>

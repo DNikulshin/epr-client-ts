@@ -140,7 +140,12 @@ body {
 }
 
 .ymaps-2-1-79-gotoymaps__pin {
-    margin-left: 2rem !important;
+    margin-left: 3rem !important;
+    height: 24px!important;
+    position: absolute!important;
+    z-index: 3!important;
+    transform: translate(-50%, -50%)!important;
+    padding: 1.5rem!important;
 }
 
 .text-shadow {

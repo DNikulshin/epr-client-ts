@@ -11,37 +11,51 @@ export interface IOptions {
     label?: string
     value?: {
         dateDoFrom?: number | string | undefined,
-        dateDoTo?: number | string | undefined
+        dateDoTo?: number | string | undefined,
+        typeRequest?: string,
+        stateId?: number
     }
 }
 
 const options: IOptions[] = [
     {
-        label: 'Заявки сегодня',
+        label: 'Заявки подраздел. сегодня',
         value: {
             dateDoFrom: moment().format('DD.MM.YYYY'),
-            dateDoTo: moment().format('DD.MM.YYYY')
+            dateDoTo: moment().format('DD.MM.YYYY'),
+            typeRequest: 'division',
         }
     },
     {
-        label: 'Заявки завтра',
+        label: 'Заявки подраздел. завтра',
         value: {
             dateDoFrom: moment().add(1, 'days').format('DD.MM.YYYY'),
-            dateDoTo: moment().add(1, 'days').format('DD.MM.YYYY')
+            dateDoTo: moment().add(1, 'days').format('DD.MM.YYYY'),
+            typeRequest: 'division'
         }
     },
     {
-        label: 'Заявки вчера',
+        label: 'Заявки подраздел. вчера',
         value: {
             dateDoFrom: moment().subtract(1, 'days').format('DD.MM.YYYY'),
-            dateDoTo: moment().subtract(1, 'days').format('DD.MM.YYYY')
+            dateDoTo: moment().subtract(1, 'days').format('DD.MM.YYYY'),
+            typeRequest: 'division'
         }
     },
     {
-        label: 'Заявки в этом месяце',
+        label: 'Заявки подраздел. в этом месяце',
         value: {
             dateDoFrom: moment().startOf('month').format('DD.MM.YYYY'),
-            dateDoTo:  moment().endOf('month').format('DD.MM.YYYY')
+            dateDoTo:  moment().endOf('month').format('DD.MM.YYYY'),
+            typeRequest: 'division'
+        }
+    },
+    {
+        label: 'Мои заявки сегодня',
+        value: {
+            dateDoFrom: moment().format('DD.MM.YYYY'),
+            dateDoTo: moment().format('DD.MM.YYYY'),
+            typeRequest: 'employee'
         }
     }
 ]
@@ -57,7 +71,7 @@ export const Navigation = ({logout}: navigationProps) => {
 
     useEffect(() => {
         if(selectedOption.value) {
-            getItems({dateDoTo: selectedOption?.value?.dateDoTo, dateDoFrom: selectedOption?.value?.dateDoFrom})
+            getItems({dateDoTo: selectedOption?.value?.dateDoTo, dateDoFrom: selectedOption?.value?.dateDoFrom, typeRequest: selectedOption?.value?.typeRequest})
         }
 
 
@@ -83,37 +97,69 @@ export const Navigation = ({logout}: navigationProps) => {
     return (
         <>
             <header
-                className={"d-flex flex-column justify-content-around align-items-center bg-secondary bg-opacity-75 flex-nowrap rounded position-sticky w-100 top-0 p-2 mb-2" + " " + cls}
+                className={"d-flex flex-column justify-content-around align-items-center bg-secondary bg-opacity-75 flex-nowrap rounded position-sticky w-100 top-0 p-3 mb-2" + " " + cls}
                 style={{
                     zIndex: 9999
                 }}
             >
-                <div className='d-flex align-items-center gap-5 mb-3'>
-                    <button className="btn btn-primary fs-5 btn-hover btn-shadow"
-                            onClick={() => getItems({dateDoTo: selectedOption?.value?.dateDoTo, dateDoFrom: selectedOption?.value?.dateDoFrom})}>
-                        <i className="bi bi-arrow-clockwise"/>
+                <div className='d-flex align-items-center gap-4 mb-3'>
+                    <button className="btn btn-primary btn-hover btn-shadow"
+                            onClick={() => getItems({
+                                dateDoTo: selectedOption?.value?.dateDoTo,
+                                dateDoFrom: selectedOption?.value?.dateDoFrom,
+                                typeRequest: selectedOption?.value?.typeRequest
+                            })}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             className="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                            <path fillRule="evenodd"
+                                  d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                            <path
+                                d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                        </svg>
                     </button>
                     <Link to="/"
-                          className="d-flex btn btn-sm bg-primary-subtle btn-hover btn-outline-success fs-4 flex-nowrap btn-shadow"
-                    ><i className="bi bi-house"></i>
+                          className="d-flex btn bg-primary-subtle btn-hover btn-outline-success flex-nowrap btn-shadow"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             className="bi bi-house" viewBox="0 0 16 16">
+                            <path
+                                d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
+                        </svg>
                     </Link>
-                    <Link to="/user" className="btn btn-sm  fs-4 btn-shadow bg-success btn-hover"><i className="bi bi-person-bounding-box"></i></Link>
+                    <Link to="/user" className="btn btn-shadow bg-success btn-hover">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             className="bi bi-person-bounding-box" viewBox="0 0 16 16">
+                            <path
+                                d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5M.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5"/>
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                        </svg>
+                        </Link>
                     <Link
                         className="btn btn-sm btn-danger text-white btn-shadow btn-hover"
+                        style={{
+                            marginLeft: '2rem'
+                        }}
                         to='/login'
                         title="Выйти"
                         onClick={logout}
                     >
-                        <i className="bi bi-power"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             className="bi bi-power" viewBox="0 0 16 16">
+                            <path d="M7.5 1v7h1V1z"/>
+                            <path
+                                d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812"/>
+                        </svg>
                     </Link>
                 </div>
 
                 {location.pathname === '/'
                     && <Select
-                    defaultValue={selectedOption}
-                    onChange={(newValue) => setSelectedOption(newValue ?? {})}
-                    options={options}
-                    className="d=flex w-100"
+                        defaultValue={selectedOption}
+                        onChange={(newValue) => setSelectedOption(newValue ?? {})}
+                        options={options}
+                        className="d=flex w-100 bg-dark-subtle"
+                        autoFocus={false}
+                        isSearchable={false}
                 />}
 
             </header>

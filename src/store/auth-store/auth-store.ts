@@ -1,6 +1,7 @@
 import {create} from 'zustand'
 import {instanceAxios} from '../../axios.ts'
 import {toast} from 'react-toastify'
+import {AxiosError} from "axios";
 
 interface authStore {
     isAuth: boolean
@@ -69,6 +70,7 @@ export const useAuthStore = create<authStore>() ((set, get) => ({
                         }
 
                     })
+
                     const {userId} = get()
                     if (userId) {
                         localStorage.setItem('divisionId', Object.keys(data[userId]['division'])[0] || '')
@@ -81,12 +83,13 @@ export const useAuthStore = create<authStore>() ((set, get) => ({
             return Result
 
         } catch (e) {
-            set({isAuth: false})
-            if (e instanceof Error) {
-                console.log(e)
-                set({error: e.message})
-                toast(e.message)
+            if (e instanceof AxiosError) {
+                set({error: e.code})
+                toast(e.code)
                 set({loading: false})
+            } else {
+                set({loading: false})
+                throw e
             }
         }
     },
