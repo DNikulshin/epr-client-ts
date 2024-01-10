@@ -13,7 +13,10 @@ export const Pagination = ({itemsPerPage}: itemsPerPageProps) => {
     const listItems = useDataStore(state => state.listItems)
     const countItems = useDataStore(state => state.countItems)
     const endOffset = itemOffset + itemsPerPage
-    const currentItems = listItems.slice(itemOffset, endOffset)
+    const currentItems = listItems
+     .sort((a,b) => a.date?.todo.localeCompare(b.date?.todo))
+     .slice(itemOffset, endOffset)
+
     const pageCount = Math.ceil(countItems / itemsPerPage)
 
     function Items() {
@@ -21,7 +24,6 @@ export const Pagination = ({itemsPerPage}: itemsPerPageProps) => {
             <>
                 { currentItems &&
                     currentItems
-                        .sort((a, b) => a.date?.todo.localeCompare(b.date?.todo))
                         .map((item, idx) => {
                             return (
                                 <div className="accordion d-flex flex-column my-2" key={item.id}>

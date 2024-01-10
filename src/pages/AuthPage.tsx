@@ -69,14 +69,6 @@ export const AuthPage = () => {
                         >
                             Войти
                         </button>
-                        {/* <button
-                            type="submit"
-                            className="btn btn-success btn-shadow"
-                            onClick={registerHandler}
-                            disabled={loading}
-                        >
-                            Регистрация
-                        </button> */}
                     </form>
                 </div>
 

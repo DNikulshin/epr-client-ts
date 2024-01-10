@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
 * {
     box-sizing: border-box !important;
 }
@@ -8,6 +10,7 @@ body {
     height: 100%;
     background: rgba(161, 161, 161, 0.2) !important;
     position: relative !important;
+    font-family: 'Roboto', sans-serif;
 }
 
 .btn-shadow {
@@ -364,4 +367,8 @@ body {
     background: seagreen!important;
     padding: .5rem!important;
     font-weight: bold!important;
+}
+
+.css-1nmdiq5-menu {
+    background: rgb(209, 241, 209) !important;
 }
