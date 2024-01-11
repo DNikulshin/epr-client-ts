@@ -5,6 +5,8 @@ interface userStore {
     user: Iuser
     getData: () => void
     getUserName: (id: number | string) => Promise<string>
+    getTimesheetData: () => Promise<void>
+    timesheetData: any[]
 }
 
 export interface Iuser {
@@ -18,7 +20,7 @@ export interface Iuser {
 
 }
 
-export const useUserStore = create<userStore>() ((set, get) => ({
+export const useUserStore = create<userStore>()((set, get) => ({
     user: {
         id: localStorage.getItem('userId') || '',
         name: '',
@@ -26,8 +28,9 @@ export const useUserStore = create<userStore>() ((set, get) => ({
         email: '',
         phone: '',
         position: '',
-        'last_activity_time': ''
+        'last_activity_time': '',
     },
+    timesheetData: [],
     getData: async () => {
         try {
             const {data: {data}} = await instanceAxios('', {
@@ -54,6 +57,26 @@ export const useUserStore = create<userStore>() ((set, get) => ({
             })
             return data.data[userId].name
 
+        } catch (e) {
+            console.log(e)
+        }
+    },
+    getTimesheetData: async () => {
+        try {
+            const {data: {data}} = await instanceAxios('', {
+                params: {
+                    cat: 'employee',
+                    action: 'get_timesheet_data',
+                    date_from: '01.01.2024',
+                    date_to: '31.01.2024',
+                    employee_id: get().user.id
+                }
+            })
+            const dataArray = Object.keys(data).map((item) => ({
+                date: item,
+                data: [...Object.values(data[item][get().user.id])]
+            }))
+            set({timesheetData: dataArray})
         } catch (e) {
             console.log(e)
         }
