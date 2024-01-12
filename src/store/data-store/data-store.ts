@@ -13,6 +13,8 @@ interface useDataStoreProps {
     loading: boolean
     error: string | null
     getCoordinates: (id: number) => Promise<Coordinates>
+    getOwners: () => Promise<void>
+    owners: Owner[]
 }
 
 
@@ -27,20 +29,20 @@ interface dateDoProps {
     typeRequest?: string
 }
 
-// enum stateId {
-//     notDone = 1,
-//     performed = 3,
-//     postponed = 4,
-//     archive = 5
-// }
+interface Owner {
+    address?: string
+    name?: string
+    phone?: string
+}
 
 export const useDataStore = create<useDataStoreProps>()((set, get) => ({
     listItems: [],
-    userId: localStorage.getItem('userId') || '',
+    userId: localStorage.getItem('userId') || '{}',
     countItems: 0,
     listItemsId: '',
     loading: false,
     error: null,
+    owners: [],
     getItems: async (dateDo: dateDoProps) => {
         try {
             toast(null)
@@ -100,17 +102,6 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
 
     getCoordinates: async (id: number) => {
         try {
-
-            // const getBuildingId = await instanceAxios('', {
-            // params: {
-            //     cat: 'address',
-            // action: 'get',
-            //      id
-            //   }
-            // })
-            // console.log(Object.keys(getBuildingId.data?.Data)[0], 'getBuildingId')
-            // const  billingId = Object.keys(data.data)[0]
-
             const {data} = await instanceAxios('', {
                 params: {
                     cat: 'node',
@@ -120,6 +111,27 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
             })
 
             return data.data[Object.keys(data.data)[0]]['coordinates']
+
+        } catch (e) {
+            if (e instanceof AxiosError) {
+                set({error: e.code})
+                toast(e.code)
+                set({loading: false})
+            } else {
+                set({loading: false})
+                throw e
+            }
+        }
+    },
+    getOwners: async () => {
+        try {
+            const {data : {data}} = await instanceAxios('', {
+                params: {
+                    cat: 'owner',
+                    action: 'get'
+                }
+            })
+            set({owners: Object.values(data)})
 
         } catch (e) {
             if (e instanceof AxiosError) {

@@ -17,6 +17,7 @@ export const ClaimsItem = (props: Iitem) => {
     const getUserName = useUserStore(state => state.getUserName)
     const getDivision = useUserStore(state => state.getDivision)
     const regExpSortTel = /(\+7|8)[- _]*\(?[- _]*(\d{3}[- _]*\)?([- _]*\d){7}|\d\d[- _]*\d\d[- _]*\)?([- _]*\d){6})/g
+
     const {
         id,
         index,
@@ -98,11 +99,10 @@ export const ClaimsItem = (props: Iitem) => {
                     display: 'flex',
                     alignItems: 'center'
                 }}>
-                    <button
+                    <div
                         className={!open
                             ? 'accordion-button btn-accordion'
                         : 'accordion-button btn-accordion collapsed btn-accordion-active'}
-                            type="button"
                     >
                         <div className="content-btn d-flex flex-wrap align-items-center position-relative pe-4">
                             <div className="d-flex align-items-center justify-content-between w-100">
@@ -139,7 +139,7 @@ export const ClaimsItem = (props: Iitem) => {
                             <div>&nbsp;Статус:&nbsp;<span
                                 className={state?.id === 1 ? "text-bg-danger" : "text-bg-success"}>{state?.name}</span>
                             </div>
-                            <div>&nbsp;Тип:&nbsp;{type?.name}&nbsp;</div>
+                            <div>&nbsp;Тип:&nbsp;{type?.name.replace('&#047;', '/')}&nbsp;</div>
                             {open ?
                                 <div
                                     className="arrow-toggle"
@@ -171,7 +171,7 @@ export const ClaimsItem = (props: Iitem) => {
                                                 href={'tel:' + el.value.match(regExpSortTel)}
                                             >
                                                 {el.value.match(regExpSortTel)}
-                                            </a>}<br/><br/>
+                                            </a>}
                                             {<a className="flex" href={'tel:' + description?.match(regExpSortTel)}>
                                                 {description?.match(regExpSortTel)}
                                             </a>}
@@ -182,7 +182,7 @@ export const ClaimsItem = (props: Iitem) => {
                             <small className="text-shadow">{employee && employee}</small>
                             <small className="text-shadow">{division && division}</small>
                         </div>
-                    </button>
+                    </div>
                 </div>
                 <CSSTransition in={open} classNames="show-body" timeout={300} unmountOnExit>
                     <>
@@ -195,6 +195,11 @@ export const ClaimsItem = (props: Iitem) => {
                             <hr/>
                             <div><strong>Абонент: </strong>{customer?.fullName}</div>
                             <hr/>
+                            {customer?.login && <div><strong>Логин: </strong>{customer?.login}
+                                <hr/>
+                            </div>
+                            }
+
                             <div className="text-wrap"><strong>Описание: </strong>
                                 <br/>{description?.replace(/(<(\/?[^>]+)>)/g, '')}</div>
                             <hr/>

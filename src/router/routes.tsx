@@ -4,6 +4,7 @@ import {AuthPage} from '../pages/AuthPage.tsx'
 import {UserPage} from '../pages/UserPage.tsx'
 import {PrivateRoutes, PrivateRoutesProps} from "./PivateRoutes.tsx";
 import {MainLayout} from "../layouts/MainLayout.tsx";
+import {OwnersPage} from "../pages/OwnersPage.tsx";
 export const useRoutes = ({userId}: PrivateRoutesProps) => {
     return (
         <Routes>
@@ -16,6 +17,10 @@ export const useRoutes = ({userId}: PrivateRoutesProps) => {
 
                     <Route path="user"
                            element={<UserPage/>}
+                    >
+                    </Route>
+                    <Route path="owner"
+                           element={<OwnersPage/>}
                     >
                     </Route>
                     <Route path="*"

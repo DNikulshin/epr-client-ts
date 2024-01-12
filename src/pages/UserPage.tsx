@@ -8,7 +8,7 @@ const currentDate = moment().format('YYYY-MM-DD')
 
 export const UserPage: FC = () => {
     const {
-        id = '',
+        id,
         name,
         login,
         last_activity_time,
@@ -21,7 +21,7 @@ export const UserPage: FC = () => {
     const getTimesheetData = useUserStore((state) => state.getTimesheetData)
     const loading = useUserStore(state => state.loading)
     const error = useDataStore(state => state.error)
-    const [openDateil, setOpenDetail] = useState(false)
+    const [openDetail, setOpenDetail] = useState(false)
 
 
     useEffect(() => {
@@ -55,11 +55,11 @@ export const UserPage: FC = () => {
                     <strong className="mx-2">ФИО: {name}</strong>
                     <button className="btn btn-outline-primary btn-sm"
                             onClick={() => setOpenDetail(prevState => !prevState)}>
-                        {!openDateil ? 'Подробнее...' : 'Скрыть'}
+                        {!openDetail ? 'Подробнее...' : 'Скрыть'}
                     </button>
                 </div>
 
-                {openDateil && <ul className="list-group mb-3 w-100">
+                {openDetail && <ul className="list-group mb-3 w-100">
                     <li className="list-group-item">id: {id}</li>
                     <li className="list-group-item">ФИО: {name}</li>
                     <li className="list-group-item">логин: {login}</li>
@@ -70,19 +70,19 @@ export const UserPage: FC = () => {
                 </ul>}
 
                 <h3>Смены в этом месяце</h3>
-                <div className='d-flex flex-wrap w-100 justify-content-around align-items-center'>
+                <div className='d-flex flex-wrap w-100 justify-content-between align-items-center gap-2 mb-5'>
 
                     {timesheetData && timesheetData.sort((a, b) => a?.date.localeCompare(b?.date)).map(item => {
                         return (
-                            <p className="border bg-light mx-1" key={item?.date}>
+                            <div className="border bg-light d-flex" key={item?.date}>
                                 {
                                     item?.data.join('').includes('994')
                                         ? <span
-                                            className={currentDate === item?.date ? 'text-bg-danger  fw-bold' : 'text-bg-primary fw-bold'}>{item?.date}</span>
+                                            className={currentDate === item?.date ? 'text-bg-danger' : 'text-bg-primary'}>{item?.date}</span>
                                         : <span
                                             className={currentDate === item?.date ? 'text-danger' : 'text-secondary'}>{item?.date}</span>
                                 }
-                            </p>
+                            </div>
                         )
                     })}
                 </div>

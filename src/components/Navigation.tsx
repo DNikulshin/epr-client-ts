@@ -74,10 +74,7 @@ export const Navigation = ({logout}: navigationProps) => {
             getItems({dateDoTo: selectedOption?.value?.dateDoTo, dateDoFrom: selectedOption?.value?.dateDoFrom, typeRequest: selectedOption?.value?.typeRequest})
         }
 
-
     }, [getItems, selectedOption])
-
-
 
     useEffect(()=> {
         const handleScroll = () => {
@@ -103,7 +100,7 @@ export const Navigation = ({logout}: navigationProps) => {
                 }}
             >
                 <div className='d-flex align-items-center gap-4 mb-3'>
-                    <button className="btn btn-primary btn-hover btn-shadow"
+                    {location.pathname === '/' && <button className="btn btn-primary btn-hover btn-shadow"
                             onClick={() => getItems({
                                 dateDoTo: selectedOption?.value?.dateDoTo,
                                 dateDoFrom: selectedOption?.value?.dateDoFrom,
@@ -116,7 +113,7 @@ export const Navigation = ({logout}: navigationProps) => {
                             <path
                                 d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
                         </svg>
-                    </button>
+                    </button>}
                     <Link to="/"
                           className="d-flex btn bg-primary-subtle btn-hover btn-outline-success flex-nowrap btn-shadow"
                     >
@@ -135,15 +132,27 @@ export const Navigation = ({logout}: navigationProps) => {
                         </svg>
                         </Link>
                     <Link
-                        className="btn btn-sm btn-danger text-white btn-shadow btn-hover"
+                        className="btn btn-sm btn-outline-light text-white btn-shadow btn-hover"
                         style={{
-                            marginLeft: '2rem'
+                            marginLeft: '1.5rem'
                         }}
+                        to='/owner'
+                        title="УК"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                             className="bi bi-key" viewBox="0 0 16 16">
+                            <path
+                                d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8m4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5"/>
+                            <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                        </svg>
+                    </Link>
+                    <Link
+                        className="btn btn-sm btn-danger text-white btn-shadow btn-hover"
                         to='/login'
                         title="Выйти"
                         onClick={logout}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                              className="bi bi-power" viewBox="0 0 16 16">
                             <path d="M7.5 1v7h1V1z"/>
                             <path
