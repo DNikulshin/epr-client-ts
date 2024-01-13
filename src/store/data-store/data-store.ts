@@ -14,7 +14,9 @@ interface useDataStoreProps {
     error: string | null
     getCoordinates: (id: number) => Promise<Coordinates>
     getOwners: () => Promise<void>
+    getDevises: () => Promise<void>
     owners: Owner[]
+    devices: Device[]
 }
 
 
@@ -34,6 +36,11 @@ interface Owner {
     name?: string
     phone?: string
 }
+interface Device {
+    code: number
+    LOCATION?: string
+}
+
 
 export const useDataStore = create<useDataStoreProps>()((set, get) => ({
     listItems: [],
@@ -43,6 +50,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
     loading: false,
     error: null,
     owners: [],
+    devices: [],
     getItems: async (dateDo: dateDoProps) => {
         try {
             toast(null)
@@ -132,6 +140,29 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
                 }
             })
             set({owners: Object.values(data)})
+
+        } catch (e) {
+            if (e instanceof AxiosError) {
+                set({error: e.code})
+                toast(e.code)
+                set({loading: false})
+            } else {
+                set({loading: false})
+                throw e
+            }
+        }
+    },
+    getDevises: async () => {
+        try {
+            const {data : {data}} = await instanceAxios('', {
+                params: {
+                    cat: 'device',
+                    action: 'get_data',
+                    'object_type': 'all',
+                    'is_online': '-1'
+                }
+            })
+           set({devices: Object.values(data)})
 
         } catch (e) {
             if (e instanceof AxiosError) {

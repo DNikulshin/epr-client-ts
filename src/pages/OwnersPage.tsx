@@ -7,12 +7,12 @@ export const OwnersPage = () => {
     const [value] = useDebounce(inputValue, 500)
     const getOwners = useDataStore((state) => state.getOwners)
     const owners = useDataStore((state) => state.owners)
-    console.log(owners)
-
 
     const filteredOwner = owners.filter(owner => {
         if(value) {
-            return owner.address?.toLowerCase().includes(value.toLowerCase())
+            return owner.address?.toLowerCase().includes(value.toLowerCase()) ||
+                owner.name?.toLowerCase().includes(value.toLowerCase())
+
         }
         return owners
     })
@@ -21,6 +21,7 @@ export const OwnersPage = () => {
     useEffect(() => {
         getOwners()
     }, [getOwners])
+
     return (
         <>
             <div className="input-group mb-3">
@@ -45,6 +46,7 @@ export const OwnersPage = () => {
                     )
                 })}
             </ul>
+            {!filteredOwner.length && <p className="text-danger text-center">Не найдено.</p>}
         </>
 
     )

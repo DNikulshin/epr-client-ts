@@ -19,14 +19,16 @@ export const UserPage: FC = () => {
     const getData = useUserStore((state) => state.getData)
     const timesheetData = useUserStore((state) => state.timesheetData)
     const getTimesheetData = useUserStore((state) => state.getTimesheetData)
+   // const getDevises = useDataStore((state) => state.getDevises)
+  //  const devices = useDataStore((state) => state.devices)
     const loading = useUserStore(state => state.loading)
     const error = useDataStore(state => state.error)
     const [openDetail, setOpenDetail] = useState(false)
 
-
     useEffect(() => {
         getData()
         getTimesheetData()
+       // getDevises()
     }, [getData, getTimesheetData])
 
     if (error === 'ERR_NETWORK') {
@@ -86,6 +88,11 @@ export const UserPage: FC = () => {
                         )
                     })}
                 </div>
+                { /*<ul className="list-group mb-3 w-100 d-flex flex-column gap-1">
+                    {devices && devices.map(item => {
+                        return (<li className="list-group-item" key={item.code}>{item.LOCATION}</li>)
+                    })}
+                </ul> */}
             </div>
             }
         </>
