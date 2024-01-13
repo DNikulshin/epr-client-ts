@@ -71,7 +71,7 @@ export const UserPage: FC = () => {
                     <li className="list-group-item">последняя активность: {last_activity_time}</li>
                 </ul>}
 
-                <h3>Смены в этом месяце</h3>
+                <h3 className="mb-3">Смены в этом месяце</h3>
                 <div className='d-flex flex-wrap w-100 justify-content-between align-items-center gap-2 mb-5'>
 
                     {timesheetData && timesheetData.sort((a, b) => a?.date.localeCompare(b?.date)).map(item => {
@@ -80,9 +80,9 @@ export const UserPage: FC = () => {
                                 {
                                     item?.data.join('').includes('994')
                                         ? <span
-                                            className={currentDate === item?.date ? 'text-bg-danger' : 'text-bg-primary'}>{item?.date}</span>
+                                            className={currentDate === item?.date ? 'text-bg-danger p-1' : 'text-bg-primary p-1'}>{item?.date}</span>
                                         : <span
-                                            className={currentDate === item?.date ? 'text-danger' : 'text-secondary'}>{item?.date}</span>
+                                            className={currentDate === item?.date ? 'text-danger p-1' : 'text-secondary p-1'}>{item?.date}</span>
                                 }
                             </div>
                         )
