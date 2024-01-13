@@ -132,7 +132,7 @@ export const Navigation = ({logout}: navigationProps) => {
                         </svg>
                         </Link>
                     <Link
-                        className="btn btn-sm btn-outline-light text-dark btn-shadow btn-hover"
+                        className="btn btn-sm btn-outline-success text-dark btn-shadow btn-hover"
                         style={{
                             marginLeft: '1.5rem'
                         }}
