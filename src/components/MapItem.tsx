@@ -12,7 +12,6 @@ export const MapItem = ({coordinates}: MapProps) => {
 
     return (
         <div className="map" style={{
-           // display: 'none'
         }}>
             <h2>Yandex Maps</h2>
             <YMaps>

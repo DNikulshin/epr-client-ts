@@ -306,33 +306,6 @@ body {
     left: 1rem;
 }
 
-.d-select {
-    margin: .5rem 0 !important;
-    text-align: center !important;
-}
-
-.d-select label {
-    margin: 0 0 3px 0;
-    padding: 0;
-    font-weight: bold;
-    display: block;
-}
-
-.d-select select {
-    display: block;
-    box-sizing: border-box;
-    border: 1px solid #bebebe;
-    margin: 0 0 5px;
-    padding: .5rem 0 !important;
-    width: 100%;
-    outline: none;
-    transition: all .3s ease-in-out;
-}
-
-.d-select select:hover {
-    background: rgba(225, 213, 213, 0.85) !important;
-}
-
 .bi-geo-alt-fill::before {
     color: brown !important;
 }
@@ -343,7 +316,7 @@ body {
 
 .arrow-toggle {
     position: absolute!important;
-    right: 0!important;
+    right: 1rem!important;
     transition: all .5s!important;
 }
 
@@ -369,6 +342,15 @@ body {
     font-weight: bold!important;
 }
 
-.css-1nmdiq5-menu {
-    background: rgb(209, 241, 209) !important;
+/*.css-1nmdiq5-menu {*/
+/*    background: rgb(209, 241, 209) !important;*/
+/*}*/
+
+.active{
+    background: brown !important;
+    color: white!important;
+}
+
+.padding-sm {
+    padding: 0.1rem!important;
 }

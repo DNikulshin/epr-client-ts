@@ -1,5 +1,6 @@
-import {useDataStore} from "../store/data-store/data-store.ts"
-import {Pagination} from "./Pagination.tsx"
+import {useDataStore} from "../../store/data-store/data-store.ts"
+import {PaginationListItems} from "./PaginationListItems.tsx"
+import {ErrorItem} from "../error/ErrorItem.tsx";
 
 export const ClaimsList = () => {
     const countItems = useDataStore(state => state.countItems)
@@ -24,21 +25,9 @@ export const ClaimsList = () => {
 
     if (!countItems && !loading) {
         if (error === 'ERR_NETWORK') {
-            return <>
-
-                <h3 className="text-danger text-center mt-5">
-                    <br/>
-                    Неполадки в сети...!
-                </h3>
-            </>
+            return  <ErrorItem text={'Неполадки в сети...!'}/>
         }
-        return <>
-
-            <h3 className="text-danger text-center mt-5">
-                <br/>
-                Заявок нет!
-            </h3>
-        </>
+        return <ErrorItem text={'Заявок нет!'}/>
     }
 
     return (
@@ -48,11 +37,11 @@ export const ClaimsList = () => {
                     className="text-success mx-4">{countItems}</strong>
                 </div>
             }
-            <Pagination itemsPerPage={5}/>
-
+              <PaginationListItems itemsPerPage={5}/>
             {!loading && countItems >= 3 &&
                 <div className="text-center">
-                    <button type="button" className="btn btn-sm btn-primary mb-3 mt-2 btn-hover" onClick={handleClick}>
+                    <button type="button" className="btn btn-sm btn-primary mb-3 mt-2 btn-hover"
+                            onClick={handleClick}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
                              className="bi bi-arrow-up-circle" viewBox="0 0 16 16">
                             <path fillRule="evenodd"
@@ -61,6 +50,7 @@ export const ClaimsList = () => {
                     </button>
                 </div>
             }
+
         </>
     )
 }

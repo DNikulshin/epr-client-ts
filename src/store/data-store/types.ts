@@ -12,6 +12,7 @@ export interface Iitem {
     description?: string
     description_short?: string
     author_employee_id?: number
+    employee: any[]
     priceCustom?: string
     volumeCustom?: string
     comments?: Comment[]
@@ -20,7 +21,10 @@ export interface Iitem {
         division?: object | undefined
         employee?: object | undefined
     }
-    history?: History[]
+    history?: History[],
+    setOpen: (bool: boolean) => void,
+    handleClickItem: () => void,
+    open: boolean
 }
 
 export interface Type {

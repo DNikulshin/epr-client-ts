@@ -7,7 +7,7 @@ export const MainLayout = () => {
     return <>
         {<Navigation logout={logout}/>}
         <div className="container">
-            <main>
+            <main className="mb-3">
                 <Outlet/>
             </main>
         </div>

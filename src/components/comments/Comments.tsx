@@ -1,15 +1,18 @@
 import {CommentUser} from "./Comment.tsx";
-import {Comment} from "../store/data-store/types.ts";
+import {Comment} from "../../store/data-store/types.ts";
 import {useState} from "react";
 
 
 export const Comments = (comments: Comment[]) => {
     const [open, setOpen] = useState(false)
-    const getComments = () => Object.values(comments).map(commentItem => <CommentUser {...commentItem}
-                                                                                      key={commentItem.id}/>)
+
+    const getComments = () => Object.values(comments)
+        .map(commentItem =>
+            <CommentUser {...commentItem}
+                         key={commentItem.id}/>)
     return (
         <div className='d-flex justify-content-between flex-column'>
-            <strong className='mb-2'>Комменты: <br/></strong>
+            <strong className='mb-2'>Комменты:</strong>
             {
                 Object.keys(comments)?.length <= 3
 

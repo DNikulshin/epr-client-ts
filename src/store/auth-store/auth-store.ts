@@ -9,7 +9,7 @@ interface authStore {
     userName: string | null
     userId: number | string | null
     divisionId: number | string | null
-    checkAuth: (formData: IformData) => Promise<boolean | undefined>
+    checkAuth: (formData: IformData) => Promise<string | undefined>
     logout: () => void
     loading: boolean
     error: string | null
@@ -28,7 +28,7 @@ export const useAuthStore = create<authStore>() ((set, get) => ({
     divisionId: '',
     loading: false,
     error: null,
-    checkAuth: async (formData: IformData): Promise<boolean | undefined> => {
+    checkAuth: async (formData: IformData): Promise<string | undefined> => {
         try {
             toast(null)
             set({error: null})
@@ -43,6 +43,7 @@ export const useAuthStore = create<authStore>() ((set, get) => ({
                     'Content-Type': 'multipart/form-data'
                 }
             })
+
             if (Result === 'OK') {
                 set({isAuth: true})
                 set({userName: formData.login})
@@ -61,21 +62,19 @@ export const useAuthStore = create<authStore>() ((set, get) => ({
                     set({userId: id})
                     localStorage.setItem('userId', id)
                 }
+
+                const { userId: id} = get()
+
                 if (!localStorage.getItem('divisionId')) {
                     const {data: {data}} = await instanceAxios('', {
                         params: {
                             cat: 'employee',
                             action: 'get_data',
-                            id: get().userId
+                            id
                         }
-
                     })
 
-                    const {userId} = get()
-                    if (userId) {
-                        localStorage.setItem('divisionId', Object.keys(data[userId]['division'])[0] || '')
-                    }
-
+                    if (id) localStorage.setItem('divisionId', Object.keys(data[id]['division'])[0] || '')
                 }
             }
 

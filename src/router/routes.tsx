@@ -2,15 +2,15 @@ import {Navigate, Route, Routes} from 'react-router-dom'
 import {ClaimsPage} from '../pages/ClaimsPage.tsx'
 import {AuthPage} from '../pages/AuthPage.tsx'
 import {UserPage} from '../pages/UserPage.tsx'
-import {PrivateRoutes, PrivateRoutesProps} from "./PivateRoutes.tsx";
+import {PrivateRoutes} from "./PivateRoutes.tsx";
 import {MainLayout} from "../layouts/MainLayout.tsx";
-import {OwnersPage} from "../pages/OwnersPage.tsx";
-export const useRoutes = ({userId}: PrivateRoutesProps) => {
+import {InfoPage} from "../pages/InfoPage.tsx";
+export const useRoutes = () => {
     return (
         <Routes>
-            <Route element={<PrivateRoutes userId={userId}/>}>
-                <Route element={<MainLayout/>}>
-                    <Route path='/' index
+            <Route element={<PrivateRoutes/>}>
+                <Route path='/' element={<MainLayout/>}>
+                    <Route index
                            element={<ClaimsPage/>}
                     >
                     </Route>
@@ -19,8 +19,8 @@ export const useRoutes = ({userId}: PrivateRoutesProps) => {
                            element={<UserPage/>}
                     >
                     </Route>
-                    <Route path="owner"
-                           element={<OwnersPage/>}
+                    <Route path="info"
+                           element={<InfoPage/>}
                     >
                     </Route>
                     <Route path="*"
@@ -29,14 +29,14 @@ export const useRoutes = ({userId}: PrivateRoutesProps) => {
                     </Route>
                 </Route>
             </Route>
-            {<Route path="/login"
+            <Route path="/login"
                     element={<AuthPage/>}
             >
                 <Route path="*"
-                       element={<Navigate to="/" replace/>}
+                       element={<Navigate to="/login" replace/>}
                 >
                 </Route>
-            </Route>}
+            </Route>
         </Routes>
     )
 }
