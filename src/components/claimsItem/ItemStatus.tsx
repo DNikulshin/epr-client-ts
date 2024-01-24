@@ -47,6 +47,7 @@ export const ItemStatus = (props: Iitem) => {
   }, [changeStateItem, state?.name, userId])
 
   useEffect(() => {
+    if(state?.id)
     setColorStateItem(setColor(state?.id))
   }, [state?.id])
 

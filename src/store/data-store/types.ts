@@ -1,11 +1,11 @@
 export interface Iitem {
     index?: number
-    id?: number
+    id?: any
     parentTaskId?: number
     priority?: number
     type?: Type
     date?: Date | undefined
-    state?: State
+    state?: any
     customer?: Customer
     address?: Address
     node?: any[]

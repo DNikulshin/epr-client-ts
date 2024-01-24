@@ -42,8 +42,8 @@ export const ItemDetail = (props: Iitem) => {
 
           <button className="btn btn-outline-secondary d-flex align-self-end btn-hover"
                   onClick={() => {
-                    setOpen(false)
-                    handleClickItem()
+                    if(setOpen) setOpen(false)
+                    if(handleClickItem) handleClickItem()
                   }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                  className="bi bi-arrows-collapse" viewBox="0 0 16 16">
