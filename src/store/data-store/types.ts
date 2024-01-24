@@ -4,7 +4,7 @@ export interface Iitem {
     parentTaskId?: number
     priority?: number
     type?: Type
-    date?: Date
+    date?: Date | undefined
     state?: State
     customer?: Customer
     address?: Address
@@ -35,7 +35,7 @@ export interface Type {
 
 export interface Date {
     create: string
-    todo: string
+    todo?: any
     update: string
     complete: any
     deadline_individual_hour: string

@@ -96,7 +96,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
         'date_do_to': '23.04.2024',
         'employee_id': localStorage.getItem('userId'),
         // 'division_id': localStorage.getItem('divisionId'),
-        'state_id ': '1,2,3,4,5',
+        'state_id ': '1,3,4,5',
       }
 
       const paramsRequestDivision = {
