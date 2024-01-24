@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Comment } from '../../store/data-store/types.ts';
-import { useUserStore } from '../../store/user-store/user-store.ts';
+import { useEffect, useState } from 'react'
+import { Comment } from '../../../store/data-store/types.ts'
+import { useUserStore } from '../../../store/user-store/user-store.ts'
 
 
 export const CommentUser = (commentItem: Comment) => {
@@ -14,7 +14,7 @@ export const CommentUser = (commentItem: Comment) => {
         if (data) setUserName(prevState => prevState + data)
       })
   }, [employee_id, getUserName])
-  console.log(userName, 'userName')
+
   return (
     <div key={id}>
       #{id}<br />

@@ -1,5 +1,5 @@
 import {CommentUser} from "./Comment.tsx";
-import {Comment} from "../../store/data-store/types.ts";
+import {Comment} from "../../../store/data-store/types.ts";
 import {useState} from "react";
 
 
@@ -12,6 +12,7 @@ export const Comments = (comments: Comment[]) => {
                          key={commentItem.id}/>)
     return (
         <div className='d-flex justify-content-between flex-column'>
+            <hr/>
             <strong className='mb-2'>Комменты:</strong>
             {
                 Object.keys(comments)?.length <= 3
@@ -50,6 +51,7 @@ export const Comments = (comments: Comment[]) => {
                                 </svg>
                             }</span>
                         </button>}
+                    <hr/>
                     </>
 
             }

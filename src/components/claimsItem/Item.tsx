@@ -1,4 +1,6 @@
+import { AdditionalData } from './AdditionalData.tsx';
 import { DateTime } from './DateTime.tsx'
+import { DetailArrow } from './detailArrow.tsx';
 import { Division } from './division/Division.tsx'
 import { Employee } from './employee/Employee.tsx';
 import { ItemDetail } from './ItemDetail.tsx'
@@ -7,24 +9,24 @@ import { MouseEventHandler, useRef, useState } from 'react'
 import { Iitem } from '../../store/data-store/types.ts'
 import { useDataStore } from '../../store/data-store/data-store.ts'
 import { MapItem } from '../MapItem.tsx'
-import { regExpSortTel, replaceSpecialSymbols } from '../../utils/replacelSymbols.ts'
+import { replaceSpecialSymbols } from '../../utils/replacelSymbols.ts'
 
 export const Item = (props: Iitem) => {
   const {
     id,
     index,
+    staff,
     address,
     type,
-    description,
-    additional_data,
   } = props
 
   const [open, setOpen] = useState(false)
-  const [openDetail, setOpenDetail] = useState(false)
+
   const refItem = useRef<HTMLDivElement | null>(null)
   const [switchComponent, setSwitchComponent] = useState(false)
   const [coordinates, setCoordinates] = useState({ lat: 0, lon: 0 })
   const getCoordinates = useDataStore(state => state.getCoordinates)
+  const [isEdit, setIsEdit] = useState(false)
 
   const handleOpen: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation()
@@ -37,13 +39,20 @@ export const Item = (props: Iitem) => {
     }
   }
 
-  const getMap = async (id: number) => {
-    getCoordinates(id).then((data) => {
-      if (data?.lat && data?.lon) {
-        setCoordinates({ lat: data.lat, lon: data.lon })
-      }
-      setSwitchComponent(true)
-    })
+  // const handleClickEdit = () => {
+  //
+  // }
+
+
+  const getMap = async (id: number | undefined) => {
+    if (id) {
+      getCoordinates(id).then((data) => {
+        if (data?.lat && data?.lon) {
+          setCoordinates({ lat: data.lat, lon: data.lon })
+        }
+        setSwitchComponent(true)
+      })
+    }
   }
 
   if (switchComponent) {
@@ -77,7 +86,7 @@ export const Item = (props: Iitem) => {
           >
             <div className="content-btn d-flex flex-wrap align-items-center">
               <div className="d-flex align-items-center justify-content-between w-100">
-                <small className=" me-3 d-flex">#{index + 1}</small>
+                <small className=" me-3 d-flex">#{index && index + 1}</small>
                 <div className="btn btn-hover fs-4 d-flex"
                      onClick={() => getMap(address?.addressId)}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -108,77 +117,33 @@ export const Item = (props: Iitem) => {
                 <strong className="me-2">Адрес:</strong>
                 {address?.text}
               </div>}
-
+              <DetailArrow handleOpen={handleOpen} open={open} />
               <DateTime {...props} />
               <ItemStatus {...props} />
-              <div><strong className="me-2">Тип:</strong>{replaceSpecialSymbols(type?.name)}</div>
-              {open ?
-                <div
-                  className="arrow-toggle"
-                  onClick={handleOpen}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                       className="bi bi-chevron-up" viewBox="0 0 16 16">
-                    <path fillRule="evenodd"
-                          d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z" />
-                  </svg>
-                </div>
-                : <div className="arrow-toggle"
-                       onClick={handleOpen}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                       className="bi bi-chevron-down fs-3" viewBox="0 0 16 16">
-                    <path fillRule="evenodd"
-                          d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                  </svg>
-                </div>
-              }
+              {type?.name && <div><strong className="me-2">Тип:</strong>{replaceSpecialSymbols(type?.name)}</div>}
 
-              <div className="d-flex flex-column w-100">
+              <AdditionalData {...props} />
+              <div className="w-100 d-flex flex-wrap position-relative">
                 <hr className="w-75" />
-                {additional_data &&
-                  <button
-                    className="btn btn-sm p-2 btn-outline box-shadow align-self-start mb-3 box-shadow bg-success text-light"
-                    onClick={() => setOpenDetail(prevState => !prevState)}
-                  >
-                    {openDetail ? 'Скрыть' : 'Подробнее...'}
-                  </button>}
-                <div className="d-flex align-self-start flex-column world-break">
-                  {openDetail && additional_data && Object.values(additional_data)
-                    .flat()
-                    .map(item =>
-                      <div key={item.id} className="mb-2">
-                        <strong>{replaceSpecialSymbols(item?.caption)}&nbsp;
-                        </strong>{replaceSpecialSymbols(item?.value)}</div>)}
-
-                  <div className="d-flex align-self-start flex-wrap gap-3">
-                    {additional_data
-                      && Object.values(additional_data).map(item =>
-                        item?.value.match(regExpSortTel) ?
-                          <a
-                            key={item.id}
-                            href={`tel:${item?.value.match(regExpSortTel)}`}
-                          >
-                            {item?.value.match(regExpSortTel)}
-                          </a>
-                          : '',
-                      )}
-
-                    {description?.match(regExpSortTel) &&
-                      <div className="flex justify-content-center align-items-center mb-2">
-                        <a href={`tel:${description?.match(regExpSortTel)}`}>
-                          {description?.match(regExpSortTel)}
-                        </a>
-                      </div>}
-                  </div>
+                <Employee staff={staff} isEdit={isEdit} />
+                <Division {...props} isEdit={isEdit} />
+                <div onClick={() => { setIsEdit(prevState => !prevState)
+                }} className="position-absolute w-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
+                       className="bi bi-pencil-square btn-edit box-shadow" viewBox="0 0 16 16">
+                    <path
+                      d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                    <path fillRule="evenodd"
+                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                  </svg>
+                  {/*{isEdit && <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor"*/}
+                  {/*      className="bi bi-floppy btn-save box-shadow" viewBox="0 0 16 16">*/}
+                  {/*  <path d="M11 2H9v3h2z" />*/}
+                  {/*  <path*/}
+                  {/*    d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z" />*/}
+                  {/*</svg>}*/}
                 </div>
               </div>
-              <div className="w-100 d-flex flex-wrap">
-                <hr className="w-75" />
-                <Employee {...props} />
-                <Division {...props} />
-              </div>
-
             </div>
           </div>
         </div>

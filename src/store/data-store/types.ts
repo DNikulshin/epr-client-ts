@@ -1,18 +1,18 @@
 export interface Iitem {
-    index: number
-    id: number
+    index?: number
+    id?: number
     parentTaskId?: number
     priority?: number
-    type: Type
-    date: Date
-    state: State
-    customer: Customer
-    address: Address
-    node: any[]
+    type?: Type
+    date?: Date
+    state?: State
+    customer?: Customer
+    address?: Address
+    node?: any[]
     description?: string
     description_short?: string
     author_employee_id?: number
-    employee: any[]
+    employee?: any[]
     priceCustom?: string
     volumeCustom?: string
     comments?: Comment[]
@@ -22,14 +22,15 @@ export interface Iitem {
         employee?: object | undefined
     }
     history?: History[],
-    setOpen: (bool: boolean) => void,
-    handleClickItem: () => void,
-    open: boolean
+    setOpen?: (bool: boolean) => void,
+    handleClickItem?: () => void,
+    open?: boolean,
+    isEdit: boolean
 }
 
 export interface Type {
     id: number
-    name: string
+    name: string | undefined
 }
 
 export interface Date {

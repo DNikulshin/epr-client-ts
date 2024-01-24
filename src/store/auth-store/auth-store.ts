@@ -5,7 +5,7 @@ import {AxiosError} from "axios";
 
 interface authStore {
     isAuth: boolean
-    responseResult: string | null
+    responseResult: number | string | null
     userName: string | null
     userId: number | string | null
     divisionId: number | string | null

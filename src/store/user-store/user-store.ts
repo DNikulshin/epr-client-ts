@@ -131,7 +131,6 @@ export interface IEmployee {
                     }
                 })
                 set({loading: false})
-                console.log(data?.data[userId],'data getUserNameById')
                 return data?.data[userId]?.name
 
             } catch (e) {

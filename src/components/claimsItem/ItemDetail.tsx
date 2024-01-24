@@ -1,6 +1,6 @@
 import { CSSTransition } from 'react-transition-group';
 import { Iitem } from '../../store/data-store/types.ts';
-import { Comments } from '../comments/Comments.tsx';
+import { Comments } from './comments/Comments.tsx';
 import { regExpSortDescription } from '../../utils/replacelSymbols.ts';
 
 export const ItemDetail = (props: Iitem) => {
@@ -15,7 +15,6 @@ export const ItemDetail = (props: Iitem) => {
     handleClickItem
   } = props
 
-  console.log(comments, 'comments')
   return (
     <CSSTransition in={open} classNames="show-body" timeout={300} unmountOnExit>
       <>
@@ -25,19 +24,22 @@ export const ItemDetail = (props: Iitem) => {
           <div><strong>Дата создания: </strong>{date?.create}</div>
           <hr />
           <div><strong>Назначено: </strong>{date?.todo}</div>
-          <hr />
-          <div><strong>Абонент: </strong>{customer?.fullName}</div>
-          <hr />
-          {customer?.login && <div><strong>Логин: </strong>{customer?.login}
+
+          {customer?.fullName &&
+            <div>
+              <hr />
+              <strong>Абонент: </strong>{customer?.fullName}
+            </div>}
+
+          {customer?.login && <div>
             <hr />
+            <strong>Логин: </strong>{customer?.login}
           </div>
           }
-
           <div className="text-wrap"><strong>Описание: </strong>
             <br />{description?.replace(regExpSortDescription, '')}</div>
-          <hr />
           {comments && <Comments {...comments}/>}
-          <hr />
+
           <button className="btn btn-outline-secondary d-flex align-self-end btn-hover"
                   onClick={() => {
                     setOpen(false)

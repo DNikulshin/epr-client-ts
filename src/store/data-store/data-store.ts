@@ -39,7 +39,7 @@ interface useDataStoreProps {
   }) => Promise<ChangeStateItemReturn | undefined>
   changeDateWork: (id: number, value: string) => Promise<void>
   divisionAdd: (id: number, division_id: number) => Promise<void>
-  divisionDelete: (id: number, division_id: number) => Promise<void>
+  divisionDelete: (id: number, division_id: number | string, employee_id: number | string | null) => Promise<void>
   owners: Owner[]
   devices: Device[]
   notepad: any[]
@@ -95,7 +95,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
         'date_do_from': '01.01.2024',
         'date_do_to': '23.04.2024',
         'employee_id': localStorage.getItem('userId'),
-        'division_id': localStorage.getItem('divisionId'),
+        // 'division_id': localStorage.getItem('divisionId'),
         'state_id ': '1,2,3,4,5',
       }
 
@@ -240,7 +240,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
   },
-  divisionDelete: async ({ id, division_id, userId }: any) => {
+  divisionDelete: async (id, division_id, userId) => {
     console.log(id, division_id, userId)
     try {
       await instanceAxios('', {
@@ -249,7 +249,8 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
           action: 'division_delete',
           id,
           division_id,
-        },
+          employee_id: userId
+        }
       })
 
     } catch (e) {
@@ -375,5 +376,4 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
   },
-
 }))

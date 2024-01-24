@@ -51,7 +51,7 @@ export const ItemStatus = (props: Iitem) => {
   }, [state?.id])
 
   return (
-    <div className="d-flex justify-content-center align-items-center mb-1">&nbsp;<strong>Статус:</strong>&nbsp;
+    <div className="d-flex justify-content-center align-items-center mb-1 me-1"><strong className="me-1">Статус:</strong>
       <CustomSelect
         defaultValue={selectedOption}
         onChange={(newValue) => changeStateItemSelect(id, newValue)}
