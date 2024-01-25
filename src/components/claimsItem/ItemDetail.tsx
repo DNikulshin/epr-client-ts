@@ -1,7 +1,7 @@
 import { CSSTransition } from 'react-transition-group';
 import { Iitem } from '../../store/data-store/types.ts';
 import { Comments } from './comments/Comments.tsx';
-import { regExpSortDescription } from '../../utils/replacelSymbols.ts';
+import { replaceSpecialSymbols } from '../../utils/replacelSymbols.ts';
 
 export const ItemDetail = (props: Iitem) => {
   const {
@@ -37,7 +37,7 @@ export const ItemDetail = (props: Iitem) => {
           </div>
           }
           <div className="text-wrap"><strong>Описание: </strong>
-            <br />{description?.replace(regExpSortDescription, '')}</div>
+            <br />{replaceSpecialSymbols(description)}</div>
           {comments && <Comments {...comments}/>}
 
           <button className="btn btn-outline-secondary d-flex align-self-end btn-hover"

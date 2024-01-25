@@ -1,6 +1,6 @@
 export interface Iitem {
     index?: number
-    id?: any
+    id?: number
     parentTaskId?: number
     priority?: number
     type?: Type

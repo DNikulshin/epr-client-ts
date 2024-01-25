@@ -5,7 +5,7 @@ import moment from 'moment'
 interface userStore {
     user: Iuser
     getData: (id: number | string) => void
-    getUserNames: (id: number | string) => Promise<IEmployee[] | undefined>
+    getUserNames: (id: string) => Promise<IEmployee[] | undefined>
     getUserNameById: (id: number | string) => Promise<IEmployee | undefined>
     getDivision: (id: number | string) => Promise<IDivision[] | undefined>
     getTimesheetData: (id: number | string) => Promise<void>
@@ -39,12 +39,12 @@ export interface IStaffWork {
 }
 
 export interface IDivision {
-    id: number | string
+    id?: number | string
     comment?: string
     date_add?: string
     name?: string
-    parent_id: number
-    staff: {
+    parent_id?: number
+    staff?: {
         ex: IstaffEx[]
         work: IStaffWork[]
     }
@@ -149,7 +149,8 @@ export interface IEmployee {
                 }
             })
             set({loading: false})
-             return Object.values(data?.data)
+            console.log(data.data)
+          return  Object.values(data?.data || {})
 
         } catch (e) {
             set({loading: false})

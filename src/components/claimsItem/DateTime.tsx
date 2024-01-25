@@ -12,7 +12,7 @@ export const DateTime = (props: Iitem) => {
   const handleDateChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target?.value) {
       setSelectedDate(moment(e.target?.value).format('YYYY-MM-DD'))
-      await changeDateWork(id, `${moment(e.target?.value)
+      if(id) await changeDateWork (id, `${moment(e.target?.value)
         .format('YYYY-MM-DD')} ${date?.todo.split(' ')[1].slice(0, -3)}`)
     }
   }, [changeDateWork, date?.todo, id])
@@ -20,7 +20,7 @@ export const DateTime = (props: Iitem) => {
   const handleTimeChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target?.value) {
       setSelectedTime(e.target?.value)
-      await changeDateWork(id, `${moment(selectedDate)
+      if(id) await changeDateWork(id, `${moment(selectedDate)
         .format('YYYY-MM-DD')} ${e.target?.value}`)
     }
 
@@ -44,7 +44,7 @@ export const DateTime = (props: Iitem) => {
                                         value={selectedDate}
                                         onChange={data => handleDateChange(data)}
                                         style={{
-                                          maxWidth: '120px',
+                                          maxWidth: '135px',
                                         }}
                                       />
                             </span>

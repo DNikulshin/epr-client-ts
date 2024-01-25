@@ -55,7 +55,9 @@ export const ItemStatus = (props: Iitem) => {
     <div className="d-flex justify-content-center align-items-center mb-1 me-1"><strong className="me-1">Статус:</strong>
       <CustomSelect
         defaultValue={selectedOption}
-        onChange={(newValue) => changeStateItemSelect(id, newValue)}
+        onChange={(newValue) => {
+          if(id) changeStateItemSelect(id, newValue)
+        }}
         options={optionsChangeItem()}
         autoFocus={false}
         isSearchable={false}

@@ -5,23 +5,15 @@ import { Iitem } from './types.ts'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 
-// interface ChangeStateItemProps {
-//   id: number
-//   state_id: number | null | undefined
-//   employee_id?: number
-// }
-
 interface ChangeStateItemReturn {
   status: string
   color: string,
   id: number
 }
 
-
 interface useDataStoreProps {
   listItems: Iitem[]
   getItems: (d: dateDoProps) => void
-  // getItem: (id: number) => void
   userId: number | string,
   countItems: number
   listItemsId: string
@@ -32,14 +24,17 @@ interface useDataStoreProps {
   getDevises: () => Promise<void>
   getNotepadChapter: () => Promise<void>
   getNotepadByChapterId: (id: number) => Promise<void>
+  getAllowStaff: (id: number) => Promise<any>
   changeStateItem: (params: {
     id: number;
     state_id: number | null | undefined;
     userId: number | string | null
   }) => Promise<ChangeStateItemReturn | undefined>
   changeDateWork: (id: number, value: string) => Promise<void>
+  employeeAdd:  (id: number, division_id: number) => Promise<void>
+  employeeDelete:  (id: number, division_id: number | string, employee_id: number | string | null) => Promise<string>
   divisionAdd: (id: number, division_id: number) => Promise<void>
-  divisionDelete: (id: number, division_id: number | string, employee_id: number | string | null) => Promise<void>
+  divisionDelete: (id: number, division_id: number | string, employee_id: number | string | null) => Promise<string>
   owners: Owner[]
   devices: Device[]
   notepad: any[]
@@ -93,12 +88,12 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
         cat: 'task',
         action: 'get_list',
         'date_do_from': '01.01.2024',
-        'date_do_to': '23.04.2024',
+        'date_do_to': '25.01.2024',
         'employee_id': localStorage.getItem('userId'),
         // 'division_id': localStorage.getItem('divisionId'),
         'state_id ': '1,3,4,5',
       }
-
+// #132402 - Спецзадание РЕМ - ТЕСТОВАЯ заявка
       const paramsRequestDivision = {
         cat: 'task',
         action: 'get_list',
@@ -141,32 +136,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
     }
 
   },
-  // getItem: async (id) => {
-  //   console.log(id)
-  //   try {
-  //     console.log(id)
-  //     const { data } = await instanceAxios('', {
-  //       params: {
-  //         cat: 'task',
-  //         action: 'show',
-  //         id: id,
-  //       }
-  //     })
-  //     console.log(data)
-  //     return data
-  //
-  //   } catch (e) {
-  //     if (e instanceof AxiosError) {
-  //       set({ error: e.code })
-  //       toast(e.code)
-  //       set({ loading: false })
-  //     } else {
-  //       set({ loading: false })
-  //       throw e
-  //     }
-  //   }
-  // },
-  changeStateItem: async ({ id, state_id,userId }) => {
+  changeStateItem: async ({ id, state_id, userId }) => {
     console.log(state_id)
     try {
       console.log(id, state_id)
@@ -176,7 +146,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
           action: 'change_state',
           id,
           state_id,
-          'employee_id': userId
+          'employee_id': userId,
         },
         transformResponse: [(data) => Object.assign(data, { state_id })],
       })
@@ -194,7 +164,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
   },
-  changeDateWork: async (id, value ) => {
+  changeDateWork: async (id, value) => {
     console.log(id, value)
     try {
       await instanceAxios('', {
@@ -206,6 +176,53 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
         },
       })
 
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        set({ error: e.code })
+        toast(e.code)
+        set({ loading: false })
+      } else {
+        set({ loading: false })
+        throw e
+      }
+    }
+  },
+  employeeAdd: async ({ id, employee_id, userId }: any) => {
+    console.log(id, employee_id, userId)
+    try {
+      await instanceAxios('', {
+        params: {
+          cat: 'task',
+          action: 'employee_add',
+          id,
+          employee_id,
+        },
+      })
+
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        set({ error: e.code })
+        toast(e.code)
+        set({ loading: false })
+      } else {
+        set({ loading: false })
+        throw e
+      }
+    }
+  },
+  employeeDelete: async (id,employee_id, userId) => {
+    console.log(id, employee_id, userId)
+    try {
+      const { data } = await instanceAxios('', {
+        params: {
+          cat: 'task',
+          action: 'employee_delete',
+          id,
+          employee_id,
+          author_employee_id: userId,
+        },
+      })
+      return data?.Result
     } catch (e) {
       if (e instanceof AxiosError) {
         set({ error: e.code })
@@ -243,15 +260,38 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
   divisionDelete: async (id, division_id, userId) => {
     console.log(id, division_id, userId)
     try {
-      await instanceAxios('', {
+      const { data } = await instanceAxios('', {
         params: {
           cat: 'task',
           action: 'division_delete',
           id,
           division_id,
-          employee_id: userId
-        }
+          employee_id: userId,
+        },
       })
+      return data?.Result
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        set({ error: e.code })
+        toast(e.code)
+        set({ loading: false })
+      } else {
+        set({ loading: false })
+        throw e
+      }
+    }
+  },
+  getAllowStaff: async (id) => {
+    console.log(id)
+    try {
+      const { data } = await instanceAxios('', {
+        params: {
+          cat: 'task',
+          action: 'get_allow_staff',
+          id,
+        },
+      })
+      return data?.Data
 
     } catch (e) {
       if (e instanceof AxiosError) {

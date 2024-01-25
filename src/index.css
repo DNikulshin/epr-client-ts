@@ -360,9 +360,9 @@ body {
     right: 2rem!important;
     top: 1rem!important;
 }
-.btn-save {
+.btn-add {
     position: absolute!important;
-    right: .75rem!important;
-    top: 1rem!important;
+    right: 2rem!important;
+    top: -1.5rem!important;
 
 }

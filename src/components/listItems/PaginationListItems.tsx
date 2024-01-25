@@ -1,3 +1,4 @@
+
 import {useState} from 'react'
 import ReactPaginate from 'react-paginate'
 import {useDataStore} from "../../store/data-store/data-store.ts"
@@ -14,7 +15,12 @@ export const PaginationListItems = ({itemsPerPage}: itemsPerPageProps) => {
     const countItems = useDataStore(state => state.countItems)
     const endOffset = itemOffset + itemsPerPage
     const currentItems = listItems
-        .sort((a, b) => a.date?.todo.localeCompare(b.date?.todo))
+        .sort((a, b) =>
+            a.date?.todo > b.date?.todo
+              ? 1 :
+              a.date?.todo < b.date?.todo
+                ? -1 : 0
+        )
         .slice(itemOffset, endOffset)
 
     const pageCount = Math.ceil(countItems / itemsPerPage)
