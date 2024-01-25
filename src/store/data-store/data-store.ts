@@ -78,6 +78,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
   notepad: [],
   chapter: [],
   currentStatusStateItem: getLocalStorage('statusChangeItem'),
+  // #132402 - Спецзадание РЕМ - ТЕСТОВАЯ заявка
   getItems: async (dateDo: dateDoProps) => {
     try {
       toast(null)
@@ -87,13 +88,15 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       const paramsRequestEmployee = {
         cat: 'task',
         action: 'get_list',
-        'date_do_from': '01.01.2024',
-        'date_do_to': '25.01.2024',
+        // 'date_do_from': '01.01.2024',
+        // 'date_do_to': '25.01.2024',
+        'date_do_from': dateDo?.dateDoFrom,
+        'date_do_to': dateDo?.dateDoTo,
         'employee_id': localStorage.getItem('userId'),
         // 'division_id': localStorage.getItem('divisionId'),
         'state_id ': '1,3,4,5',
       }
-// #132402 - Спецзадание РЕМ - ТЕСТОВАЯ заявка
+
       const paramsRequestDivision = {
         cat: 'task',
         action: 'get_list',
