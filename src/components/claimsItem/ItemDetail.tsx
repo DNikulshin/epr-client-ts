@@ -1,19 +1,24 @@
-import { CSSTransition } from 'react-transition-group';
-import { Iitem } from '../../store/data-store/types.ts';
+import { FC } from 'react';
+import { CSSTransition } from 'react-transition-group'
+import { IItem } from '../../store/data-store/types.ts'
 import { Comments } from './comments/Comments.tsx';
-import { replaceSpecialSymbols } from '../../utils/replacelSymbols.ts';
+import { replaceSpecialSymbols } from '../../utils/replacelSymbols.ts'
 
-export const ItemDetail = (props: Iitem) => {
-  const {
-    id,
-    date,
-    customer,
-    comments,
-    description,
-    setOpen,
-    open,
-    handleClickItem
-  } = props
+interface PropTypes extends IItem {
+  itemId: number
+}
+
+export const ItemDetail: FC<PropTypes> = ({
+id,
+date,
+customer,
+comments,
+description,
+setOpen,
+open,
+handleClickItem,
+itemId
+}) => {
 
   return (
     <CSSTransition in={open} classNames="show-body" timeout={300} unmountOnExit>
@@ -36,14 +41,18 @@ export const ItemDetail = (props: Iitem) => {
             <strong>Логин: </strong>{customer?.login}
           </div>
           }
-          <div className="text-wrap"><strong>Описание: </strong>
-            <br />{replaceSpecialSymbols(description)}</div>
-          {comments && <Comments {...comments}/>}
+          {description &&
+            <div className="text-wrap d-flex flex-column">
+              <hr />
+              <strong>Описание: </strong>
+              {replaceSpecialSymbols(description)}
+            </div>}
+          {comments &&  <Comments comments={comments} itemId={itemId}/>}
 
           <button className="btn btn-outline-secondary d-flex align-self-end btn-hover"
                   onClick={() => {
-                    if(setOpen) setOpen(false)
-                    if(handleClickItem) handleClickItem()
+                    if (setOpen) setOpen(false)
+                    if (handleClickItem) handleClickItem()
                   }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                  className="bi bi-arrows-collapse" viewBox="0 0 16 16">

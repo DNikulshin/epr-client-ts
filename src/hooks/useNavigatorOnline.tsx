@@ -1,11 +1,11 @@
 import {useEffect, useState} from 'react'
 
 export function useNavigatorOnline() {
-    const [value, setValue] = useState(window.navigator.onLine);
+    const [value, setValue] = useState(window.navigator.onLine)
 
     useEffect(() => {
         function handleOnlineStatus() {
-            setValue(window.navigator.onLine);
+            setValue(window.navigator.onLine)
         }
 
         window.addEventListener('online', handleOnlineStatus)

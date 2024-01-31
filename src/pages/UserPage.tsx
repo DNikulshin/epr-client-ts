@@ -1,18 +1,13 @@
 import { useEffect, FC, useState } from 'react'
 import { useUserStore } from '../store/user-store/user-store.ts'
-import { Iuser } from '../store/user-store/user-store.ts'
-import { useDataStore } from '../store/data-store/data-store.ts';
+import { IUser } from '../store/user-store/user-store.ts'
+import { useDataStore } from '../store/data-store/data-store.ts'
 import moment from 'moment'
 import 'moment/locale/ru'
-import { useAuthStore } from '../store/auth-store/auth-store.ts';
-import { ErrorItem } from '../components/error/ErrorItem.tsx';
+import { useAuthStore } from '../store/auth-store/auth-store.ts'
+import { ErrorItem } from '../components/error/ErrorItem.tsx'
 
 const currentDate = moment().format('YYYY-MM-DD')
-// const getCurrentDay = (date: number) => {
-//   moment.locale('ru')
-//   return moment(date, 'YYYY-MM-DD').format('dd')
-// }
-
 export const UserPage: FC = () => {
   const id = useAuthStore(state => state.userId)
   const {
@@ -22,12 +17,10 @@ export const UserPage: FC = () => {
     email,
     phone,
     position,
-  } = useUserStore<Iuser>((state) => state.user)
+  } = useUserStore<IUser>((state) => state.user)
   const getData = useUserStore((state) => state.getData)
   const timesheetData = useUserStore((state) => state.timesheetData)
   const getTimesheetData = useUserStore((state) => state.getTimesheetData)
-  // const getDevises = useDataStore((state) => state.getDevises)
-  //  const devices = useDataStore((state) => state.devices)
   const loading = useUserStore(state => state.loading)
   const error = useDataStore(state => state.error)
   const [openDetail, setOpenDetail] = useState(false)
@@ -38,7 +31,6 @@ export const UserPage: FC = () => {
       getTimesheetData(id)
     }
 
-    // getDevises()
   }, [getData, getTimesheetData, id])
 
   if (error === 'ERR_NETWORK') return <ErrorItem text={'Неполадки в сети...!'} />
@@ -77,7 +69,15 @@ export const UserPage: FC = () => {
         <div className="d-flex flex-wrap w-100 justify-content-between align-items-center gap-2 mb-5 box-shadow p-3">
 
           {timesheetData && timesheetData
-            .sort((a, b) => a?.date.localeCompare(b?.date))
+            .sort((a, b) => {
+              if (a?.date && b?.date) {
+                return a?.date > b?.date
+                  ? 1 :
+                  a?.date < b?.date
+                    ? -1 : 0
+              }
+              return 0
+            })
             .map(item => {
               return (
                 <div
@@ -107,11 +107,6 @@ export const UserPage: FC = () => {
               )
             })}
         </div>
-        { /*<ul className="list-group mb-3 w-100 d-flex flex-column gap-1">
-                    {devices && devices.map(item => {
-                        return (<li className="list-group-item" key={item.code}>{item.LOCATION}</li>)
-                    })}
-                </ul> */}
       </div>
     </>
   )

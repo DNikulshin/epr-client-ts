@@ -1,18 +1,19 @@
-export interface Iitem {
-    index?: number
-    id?: number
+import {IEmployee } from '../user-store/user-store.ts';
+
+export interface IItem {
+    id: number
     parentTaskId?: number
     priority?: number
     type?: Type
-    date?: Date | undefined
-    state?: any
+    date?: any
+    state?: State
     customer?: Customer
     address?: Address
-    node?: any[]
+    node?: NodeItem[]
     description?: string
     description_short?: string
     author_employee_id?: number
-    employee?: any[]
+    employee?: IEmployee[]
     priceCustom?: string
     volumeCustom?: string
     comments?: Comment[]
@@ -20,12 +21,18 @@ export interface Iitem {
     staff?: {
         division?: object | undefined
         employee?: object | undefined
-    }
+    } | undefined
     history?: History[],
     setOpen?: (bool: boolean) => void,
     handleClickItem?: () => void,
     open?: boolean,
-    isEdit: boolean
+    isEdit?: boolean
+    numberItem?: number
+}
+
+
+interface NodeItem {
+    id: number
 }
 
 export interface Type {
@@ -34,12 +41,12 @@ export interface Type {
 }
 
 export interface Date {
-    create: string
-    todo?: any
-    update: string
-    complete: any
-    deadline_individual_hour: string
-    runtime_individual_hour: number
+    create?: string
+    todo?: string
+    update?: string
+    complete?: string
+    deadline_individual_hour?: string
+    runtime_individual_hour?: number
 }
 
 export interface State {
@@ -70,10 +77,12 @@ export interface History {
 }
 
 export interface Comment {
-    id: number
-    dateAdd: string
-    employee_id: number | string
-    comment: string
+    id?: number
+    dateAdd?: string
+    employee_id?: number | string
+    comment?: string
+    itemId?: number | undefined
+    key?: number | undefined
 }
 
 export interface additionalDate {

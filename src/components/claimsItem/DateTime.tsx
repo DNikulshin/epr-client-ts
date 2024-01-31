@@ -1,9 +1,9 @@
 import moment from 'moment/moment'
 import { ChangeEvent, useCallback, useState } from 'react'
 import { useDataStore } from '../../store/data-store/data-store.ts'
-import { Iitem } from '../../store/data-store/types.ts'
+import { IItem } from '../../store/data-store/types.ts'
 
-export const DateTime = (props: Iitem) => {
+export const DateTime = (props: IItem) => {
   const { id, date } = props
   const changeDateWork = useDataStore(state => state.changeDateWork)
   const [selectedDate, setSelectedDate] = useState(moment(date?.todo).format('YYYY-MM-DD'))
@@ -27,7 +27,7 @@ export const DateTime = (props: Iitem) => {
   }, [changeDateWork, id, selectedDate])
 
   return (
-    <div className="my-2 box-shadow p-1 bg-light d-flex justify-content-center align-items-center">
+    <div className="my-2 box-shadow p-1 bg-light d-flex justify-content-center align-items-center me-1">
       <strong className="mx-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-alarm"
              viewBox="0 0 16 16">

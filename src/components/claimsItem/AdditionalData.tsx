@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { Iitem } from '../../store/data-store/types.ts';
-import { regExpSortTel, replaceSpecialSymbols } from '../../utils/replacelSymbols.ts';
+import { useState } from 'react'
+import { IItem } from '../../store/data-store/types.ts'
+import { regExpSortTel, replaceSpecialSymbols } from '../../utils/replacelSymbols.ts'
 
-export const AdditionalData = (props: Iitem) => {const {
+export const AdditionalData = (props: IItem) => {const {
   description,
   additional_data,
 } = props

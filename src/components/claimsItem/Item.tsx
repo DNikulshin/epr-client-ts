@@ -1,40 +1,39 @@
-import { IDivision, IEmployee, useUserStore } from '../../store/user-store/user-store.ts';
-import { AdditionalData } from './AdditionalData.tsx';
-import { AllowStaffAndDivisionList } from './allowStaffAndDivisionList.tsx';
+import { IDivision, IEmployee, useUserStore } from '../../store/user-store/user-store.ts'
+import { AdditionalData } from './AdditionalData.tsx'
+import { AllowStaffAndDivisionList } from './AllowStaffAndDivision/AllowStaffAndDivisionList.tsx'
 import { DateTime } from './DateTime.tsx'
-import { DetailArrow } from './detailArrow.tsx';
+import { DetailArrow } from './detailArrow.tsx'
+import { Employee } from './employee/Employee.tsx'
 import { Division } from './division/Division.tsx'
-import { Employee } from './employee/Employee.tsx';
 import { ItemDetail } from './ItemDetail.tsx'
 import { ItemStatus } from './ItemStatus.tsx'
 import { MouseEventHandler, useCallback, useRef, useState } from 'react'
-import { Iitem } from '../../store/data-store/types.ts'
+import { IItem } from '../../store/data-store/types.ts'
 import { useDataStore } from '../../store/data-store/data-store.ts'
 import { MapItem } from '../MapItem.tsx'
 import { replaceSpecialSymbols } from '../../utils/replacelSymbols.ts'
 
-export const Item = (props: Iitem) => {
+export const Item = (props: IItem) => {
   const {
     id,
-    index,
     staff,
     address,
     type,
+    numberItem
   } = props
 
   const [open, setOpen] = useState(false)
-
   const refItem = useRef<HTMLDivElement | null>(null)
   const [switchComponent, setSwitchComponent] = useState(false)
   const [coordinates, setCoordinates] = useState({ lat: 0, lon: 0 })
   const getCoordinates = useDataStore(state => state.getCoordinates)
   const getAllowStaff = useDataStore(state => state.getAllowStaff)
-  const getUserNames = useUserStore(state => state.getUserNames)
-  const getDivision = useUserStore(state => state.getDivision)
+  const getEmployees = useUserStore(state => state.getEmployees)
+  const getDivisions = useUserStore(state => state.getDivisions)
   const [isEdit, setIsEdit] = useState(false)
   const [isAdd, setIsAdd] = useState(false)
-  const [staffNames, setStaffNames] = useState<IEmployee[]>([{name: ''}])
-  const [divisionsNames, setDivisionsNames] = useState<IDivision[]>([{ name: '' }])
+  const [staffNames, setStaffNames] = useState<IEmployee[]>([])
+  const [divisionsNames, setDivisionsNames] = useState<IDivision[]>([])
 
   const handleOpen: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation()
@@ -47,24 +46,25 @@ export const Item = (props: Iitem) => {
     }
   }
 
-  const handleClickAllowStaffAndDivision = useCallback(async () => {
-    const data = id ? await getAllowStaff(id) : false
-    const staffResponse = await getUserNames(data?.staff.join(','))
-    const divisionResponse = await getDivision(data.division.join(','))
-    if(staffResponse) setStaffNames(staffResponse)
-    if(divisionResponse) setDivisionsNames(divisionResponse)
+  const AllowStaffAndDivisionHandler = useCallback(async () => {
+    const data = await getAllowStaff(id)
+    const staffResponse = await getEmployees(data.staff.join(','))
+    const divisionResponse = await getDivisions(data.division.join(','))
+    if (staffResponse) setStaffNames(staffResponse)
+    if (divisionResponse) setDivisionsNames(divisionResponse)
     setIsAdd(prevState => !prevState)
-  }, [getAllowStaff, getDivision, getUserNames, id])
+  }, [getAllowStaff, getDivisions, getEmployees, id])
 
-  console.log(staffNames, '----staffNames', divisionsNames, '----divisions')
-  const getMap = async (id: number | undefined) => {
-    if (id) {
-      getCoordinates(id).then((data) => {
-        if (data?.lat && data?.lon) {
-          setCoordinates({ lat: data.lat, lon: data.lon })
-        }
-        setSwitchComponent(true)
-      })
+
+  const getMap = async (claimId: number | undefined) => {
+    if (claimId) {
+      getCoordinates(claimId)
+        .then((data) => {
+          if (data?.lat && data?.lon) {
+            setCoordinates({ lat: data.lat, lon: data.lon })
+          }
+          setSwitchComponent(true)
+        })
     }
   }
 
@@ -87,7 +87,6 @@ export const Item = (props: Iitem) => {
       </div>
     }
   }
-
   return (
     <>
       <div className="accordion-item box-shadow position-relative" ref={refItem}>
@@ -99,7 +98,7 @@ export const Item = (props: Iitem) => {
           >
             <div className="content-btn d-flex flex-wrap align-items-center">
               <div className="d-flex align-items-center justify-content-between w-100">
-                <small className=" me-3 d-flex">#{index && index + 1}</small>
+                <small className=" me-3 d-flex">#{numberItem}</small>
                 <div className="btn btn-hover fs-4 d-flex"
                      onClick={() => getMap(address?.addressId)}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -138,35 +137,57 @@ export const Item = (props: Iitem) => {
               <AdditionalData {...props} />
               <div className="w-100 d-flex flex-wrap position-relative">
                 <hr className="w-75" />
-                <Employee staff={staff} id={id} isEdit={isEdit} />
-                <Division {...props} isEdit={isEdit} />
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
-                     className="bi bi-pencil-square btn-edit box-shadow" viewBox="0 0 16 16"
+                <Employee staff={staff} id={id} isEdit={isEdit}/>
+                <Division staff={staff} id={id} isEdit={isEdit} />
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="30"
+                     height="30"
+                     fill="currentColor"
+                     className="bi bi-pencil-square btn-edit box-shadow btn-target"
+                     style={isEdit ? { color: 'brown' } : { color: 'inherit' }}
+                     viewBox="0 0 16 16"
                      onClick={() => setIsEdit(prevState => !prevState)}
-
                 >
                   <path
                     d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                   <path fillRule="evenodd"
                         d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
                 </svg>
-                {isEdit && <>
-                  {isAdd && <AllowStaffAndDivisionList />}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor"
-                                className="bi bi-plus-square box-shadow btn-add" viewBox="0 0 16 16"
-                                onClick={handleClickAllowStaffAndDivision}
-                >
-                  <path
-                    d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
-                  <path
-                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                </svg></>
+                {isEdit &&
+                  <>
+                    {isAdd &&
+                      <AllowStaffAndDivisionList
+                        staffNames={staffNames}
+                        divisionsNames={divisionsNames}
+                        id={id}
+                      />
+                    }
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="28"
+                         height="28"
+                         fill="currentColor"
+                         className="bi bi-plus-square box-shadow btn-add btn-target"
+                         viewBox="0 0 16 16"
+                         onClick={AllowStaffAndDivisionHandler}
+                    >
+                      <path
+                        d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                      <path
+                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                    </svg>
+                  </>
                 }
               </div>
             </div>
           </div>
         </div>
-        <ItemDetail {...props} setOpen={setOpen} open={open} handleClickItem={handleClickItem} />
+        <ItemDetail
+          {...props}
+          setOpen={setOpen}
+          open={open}
+          handleClickItem={handleClickItem}
+          itemId={id}
+        />
       </div>
     </>
   )

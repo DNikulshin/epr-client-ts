@@ -1,7 +1,9 @@
+import moment from 'moment'
 import { create } from 'zustand'
 import { instanceAxios } from '../../axios.ts'
 import { getLocalStorage } from '../../hooks/interactionLocalStorage.ts'
-import { Iitem } from './types.ts'
+import { IDivision, IEmployee } from '../user-store/user-store.ts'
+import { IItem } from './types.ts'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 
@@ -12,9 +14,9 @@ interface ChangeStateItemReturn {
 }
 
 interface useDataStoreProps {
-  listItems: Iitem[]
+  listItems: IItem[]
   getItems: (d: dateDoProps) => void
-  userId: number | string,
+  userId: number | null,
   countItems: number
   listItemsId: string
   loading: boolean
@@ -24,24 +26,42 @@ interface useDataStoreProps {
   getDevises: () => Promise<void>
   getNotepadChapter: () => Promise<void>
   getNotepadByChapterId: (id: number) => Promise<void>
-  getAllowStaff: (id: number) => Promise<any>
+  getAllowStaff: (id: number) => Promise<{division: number[], staff: number[]}>
   changeStateItem: (params: {
     id: number;
-    state_id: number | null | undefined;
-    userId: number | string | null
+    state_id: number | null | undefined
   }) => Promise<ChangeStateItemReturn | undefined>
   changeDateWork: (id: number, value: string) => Promise<void>
-  employeeAdd:  (id: number, division_id: number) => Promise<void>
-  employeeDelete:  (id: number, division_id: number | string, employee_id: number | string | null) => Promise<string>
-  divisionAdd: (id: number, division_id: number) => Promise<void>
-  divisionDelete: (id: number, division_id: number | string, employee_id: number | string | null) => Promise<string>
+  employeeAdd: (id: number, division_id: number | string | undefined) => Promise<string>
+  employeeDelete: (id: number | string, division_id: number | string | undefined) => Promise<string>
+  divisionAdd: (id: number | string | undefined, division_id: number | string) => Promise<string>
+  divisionDelete: (id: number | string | undefined, division_id: number | string) => Promise<string>
   owners: Owner[]
   devices: Device[]
-  notepad: any[]
-  chapter: any[],
+  notepad: never[]
+  chapter: number[],
   currentStatusStateItem: ChangeStateItemReturn
+  isDeleteDivision: boolean
+  setIsDeleteDivision: (bool: boolean) =>  void
+  divisions: IDivision[]
+  employees: IEmployee[]
+  setDivisions: (data: any) => any
+  setEmployees: (data: any) => any
+  commentAdd: ({itemId, commentText}: commentAddProps) => Promise<string>
+  commentEdit:({id, itemId, commentText}: commentEditProps) => Promise<string>
 }
 
+interface commentEditProps {
+  id?: number
+  itemId?: number
+  commentText?: string
+}
+
+
+interface commentAddProps {
+  itemId?: number
+  commentText?: string
+}
 
 interface Coordinates {
   lat: number
@@ -65,6 +85,8 @@ interface Device {
   LOCATION?: string
 }
 
+const userId = localStorage.getItem('userId')
+const divisionId = localStorage.getItem('divisionId')
 
 export const useDataStore = create<useDataStoreProps>()((set, get) => ({
   listItems: [],
@@ -77,8 +99,22 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
   devices: [],
   notepad: [],
   chapter: [],
+  divisions: [],
+  employees: [],
+  isDeleteDivision: false,
   currentStatusStateItem: getLocalStorage('statusChangeItem'),
   // #132402 - Спецзадание РЕМ - ТЕСТОВАЯ заявка
+  setDivisions: (data) => {
+    set({divisions: data})
+    console.log(data, 'setDivision data-store')
+  },
+  setEmployees: (data) => {
+    set({employees: data})
+    console.log(data, 'setDivision data-store')
+  },
+  setIsDeleteDivision:  (status: boolean) => {
+    set({isDeleteDivision: status})
+},
   getItems: async (dateDo: dateDoProps) => {
     try {
       toast(null)
@@ -88,13 +124,14 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       const paramsRequestEmployee = {
         cat: 'task',
         action: 'get_list',
-        // 'date_do_from': '01.01.2024',
-        // 'date_do_to': '25.01.2024',
-        'date_do_from': dateDo?.dateDoFrom,
-        'date_do_to': dateDo?.dateDoTo,
-        'employee_id': localStorage.getItem('userId'),
-        // 'division_id': localStorage.getItem('divisionId'),
+        'date_do_from': '01.01.2024',
+        'date_do_to': '31.01.2024',
+        // 'date_do_from': dateDo?.dateDoFrom,
+        // 'date_do_to': dateDo?.dateDoTo,
+       'employee_id': userId,
+       // 'division_id_with_staff': localStorage.getItem('divisionId'),
         'state_id ': '1,3,4,5',
+        // 'state_id ': '1,2,3,4,5'
       }
 
       const paramsRequestDivision = {
@@ -102,7 +139,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
         action: 'get_list',
         'date_do_from': dateDo?.dateDoFrom,
         'date_do_to': dateDo?.dateDoTo,
-        'division_id_with_staff': localStorage.getItem('divisionId'),
+        'division_id_with_staff': divisionId,
         'state_id ': '1,3,4,5',
       }
       const data = await instanceAxios('', {
@@ -120,7 +157,6 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
           id: get().listItemsId,
         },
       })
-
       if (get().countItems > 1) {
         set({ listItems: Object.values(showItems.data.data) })
       } else {
@@ -139,7 +175,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
     }
 
   },
-  changeStateItem: async ({ id, state_id, userId }) => {
+  changeStateItem: async ({ id, state_id }) => {
     console.log(state_id)
     try {
       console.log(id, state_id)
@@ -153,7 +189,6 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
         },
         transformResponse: [(data) => Object.assign(data, { state_id })],
       })
-      // console.log(data)
       return data
 
     } catch (e) {
@@ -168,7 +203,6 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
     }
   },
   changeDateWork: async (id, value) => {
-    console.log(id, value)
     try {
       await instanceAxios('', {
         params: {
@@ -176,6 +210,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
           action: 'change_date_work',
           id,
           value,
+          employee_id: userId
         },
       })
 
@@ -190,17 +225,18 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
   },
-  employeeAdd: async ({ id, employee_id, userId }: any) => {
-    console.log(id, employee_id, userId)
+  employeeAdd: async ( id, employee_id ) => {
     try {
-      await instanceAxios('', {
+    const { data } =  await instanceAxios('', {
         params: {
           cat: 'task',
           action: 'employee_add',
           id,
           employee_id,
+          author_employee_id: userId
         },
       })
+     return data?.Result
 
     } catch (e) {
       if (e instanceof AxiosError) {
@@ -213,8 +249,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
   },
-  employeeDelete: async (id,employee_id, userId) => {
-    console.log(id, employee_id, userId)
+  employeeDelete: async (id,employee_id) => {
     try {
       const { data } = await instanceAxios('', {
         params: {
@@ -237,18 +272,18 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
   },
-  divisionAdd: async ({ id, division_id, userId }: any) => {
-    console.log(id, division_id, userId)
+  divisionAdd: async (id, division_id ) => {
     try {
-      await instanceAxios('', {
+      const {data} = await instanceAxios('', {
         params: {
           cat: 'task',
           action: 'division_add',
           id,
           division_id,
-        },
+          employee_id: userId
+        }
       })
-
+      return data?.Result
     } catch (e) {
       if (e instanceof AxiosError) {
         set({ error: e.code })
@@ -260,8 +295,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
   },
-  divisionDelete: async (id, division_id, userId) => {
-    console.log(id, division_id, userId)
+  divisionDelete: async (id, division_id) => {
     try {
       const { data } = await instanceAxios('', {
         params: {
@@ -269,7 +303,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
           action: 'division_delete',
           id,
           division_id,
-          employee_id: userId,
+          employee_id: userId
         },
       })
       return data?.Result
@@ -285,13 +319,62 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
     }
   },
   getAllowStaff: async (id) => {
-    console.log(id)
     try {
       const { data } = await instanceAxios('', {
         params: {
           cat: 'task',
           action: 'get_allow_staff',
           id,
+        },
+      })
+      return data?.Data
+
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        set({ error: e.code })
+        toast(e.code)
+        set({ loading: false })
+      } else {
+        set({ loading: false })
+        throw e
+      }
+    }
+  },
+  commentAdd: async ({itemId, commentText}) => {
+    try {
+      const { data } = await instanceAxios('', {
+        params: {
+          cat: 'task',
+          action: 'comment_add',
+          id: itemId,
+          dateadd:  moment().format('DD.MM.YYYY'),
+          comment: commentText,
+          employee_id: userId
+        },
+      })
+      console.log('commentAdd', data)
+      return data?.Result
+
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        set({ error: e.code })
+        toast(e.code)
+        set({ loading: false })
+      } else {
+        set({ loading: false })
+        throw e
+      }
+    }
+  },
+  commentEdit: async ({id, itemId, commentText}) => {
+    try {
+      const { data } = await instanceAxios('', {
+        params: {
+          cat: 'task',
+          action: 'comment_edit',
+          id,
+          task_id: itemId,
+          body: commentText
         },
       })
       return data?.Data
@@ -418,5 +501,5 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
         throw e
       }
     }
-  },
+  }
 }))

@@ -1,21 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
-import { OnChangeValue} from 'react-select';
-import { useAuthStore } from '../../store/auth-store/auth-store.ts';
-import { useDataStore } from '../../store/data-store/data-store.ts';
-import { Iitem } from '../../store/data-store/types.ts';
-import { CustomSelect } from '../customSelect/CustomSelect.tsx';
-import { customSelectStyles } from '../customSelect/customSelectStyles.ts';
-import { optionsChangeItem } from '../customSelect/optionsStateChangeItem.ts';
-import { IOptionsStateChangeItem } from './types.ts';
-//
-// interface currentProps {
-//   label: string
-//   value: number
-//   color: string
-//   // defaultValue: SingleValue<{ value: string; label: string ,color: string }> | undefined;
-// }
+import { useCallback, useEffect, useState } from 'react'
+import { OnChangeValue} from 'react-select'
+import { useDataStore } from '../../store/data-store/data-store.ts'
+import { IItem } from '../../store/data-store/types.ts'
+import { CustomSelect } from '../customSelect/CustomSelect.tsx'
+import { customSelectStyles } from '../customSelect/customSelectStyles.ts'
+import { optionsChangeItem } from '../customSelect/optionsStateChangeItem.ts'
+import { IOptionsStateChangeItem } from './types.ts'
 
-const setColor = (id: number) => {
+const setColor = (id: number | undefined) => {
   switch (id) {
     case 1:
       return 'brown'
@@ -29,8 +21,7 @@ const setColor = (id: number) => {
   }
 }
 
-export const ItemStatus = (props: Iitem) => {
-  const userId = useAuthStore(state => state.userId)
+export const ItemStatus = (props: IItem) => {
   const { state, id } = props
   const [colorStateItem, setColorStateItem] = useState(setColor(state?.id))
   const [selectedOption, setSelectedOption] = useState<any[]>([{
@@ -41,10 +32,10 @@ export const ItemStatus = (props: Iitem) => {
 
   const changeStateItem = useDataStore(state => state.changeStateItem)
   const changeStateItemSelect = useCallback(async (id: number, current: OnChangeValue<IOptionsStateChangeItem, false>) => {
-    await changeStateItem({ id, state_id: current?.value , userId})
+    await changeStateItem({ id, state_id: current?.value})
     setColorStateItem(current?.color)
     setSelectedOption([{ label: state?.name, value: current?.value, color:  current?.color}])
-  }, [changeStateItem, state?.name, userId])
+  }, [changeStateItem, state?.name])
 
   useEffect(() => {
     if(state?.id)

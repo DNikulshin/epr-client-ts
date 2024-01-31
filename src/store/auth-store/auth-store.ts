@@ -24,8 +24,8 @@ export const useAuthStore = create<authStore>() ((set, get) => ({
     isAuth: false,
     responseResult: null,
     userName: '',
-    userId: localStorage.getItem('userId'),
-    divisionId: '',
+    userId: localStorage.getItem('userId') || '',
+    divisionId: localStorage.getItem('divisionId') || '',
     loading: false,
     error: null,
     checkAuth: async (formData: IformData): Promise<string | undefined> => {

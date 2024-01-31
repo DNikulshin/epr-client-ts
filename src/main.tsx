@@ -6,7 +6,5 @@ import './index.css'
 import "react-datepicker/dist/react-datepicker.css"
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <>
     <App />
-  </>,
 )

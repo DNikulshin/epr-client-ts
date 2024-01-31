@@ -2,18 +2,23 @@ import {create} from 'zustand'
 import {instanceAxios} from '../../axios.ts'
 import moment from 'moment'
 
+interface TimeShiftData {
+    date?: string | undefined
+    data: any
+}
+
 interface userStore {
-    user: Iuser
+    user: IUser
     getData: (id: number | string) => void
-    getUserNames: (id: string) => Promise<IEmployee[] | undefined>
-    getUserNameById: (id: number | string) => Promise<IEmployee | undefined>
-    getDivision: (id: number | string) => Promise<IDivision[] | undefined>
+    getEmployees: (id: string) => Promise<any>
+    getEmployeeNameById: (id: number | string | undefined) => Promise<any>
+    getDivisions: (id: number | string) => Promise<any>
     getTimesheetData: (id: number | string) => Promise<void>
-    timesheetData: any[],
+    timesheetData: TimeShiftData[],
     loading: boolean
 }
 
-export interface Iuser {
+export interface IUser {
     name: string
     login: string
     email: string
@@ -22,15 +27,6 @@ export interface Iuser {
     'last_activity_time': string,
 
 }
-
-export interface IstaffEx {
-    employee_id: number
-    date_add?: number | string
-    date_out?: number | string
-    position?: string
-    status?: number
-}
-
 export interface IStaffWork {
     employee_id: number
     date_add?: number | string
@@ -45,9 +41,18 @@ export interface IDivision {
     name?: string
     parent_id?: number
     staff?: {
-        ex: IstaffEx[]
-        work: IStaffWork[]
+        employee?: object | undefined
+        division?: object | undefined
+
     }
+    isEdit?: boolean
+    itemName?: string
+    itemId?: number | string | undefined
+    divisionIds?: string
+    divisionItemId?: number | string | undefined
+    divisionName?: string
+
+
 }
 
 export interface IEmployee {
@@ -57,7 +62,7 @@ export interface IEmployee {
     gps_imei?: string
     image_id?: number
     is_work?: number
-    division?: any[]
+    division?: IDivision
     login?: string
     short_name?: string
     is_blocked?: number
@@ -67,13 +72,21 @@ export interface IEmployee {
     email?: string
     phone?: string
     messenger_chat_id?: string
-    rights?: any
-    access_address_id?: any
-    task_allow_assign_address_id?: any
-    additional_data?: any
+    rights?: unknown
+    access_address_id?: unknown
+    task_allow_assign_address_id?: unknown
+    additional_data?: unknown
+    isEdit?: boolean
+    itemName?: string
+    itemId?: number | string | undefined
+    staff?: {
+        employee?: object | undefined
+        division?: object | undefined
+
+    }
 }
 
-    export const useUserStore = create<userStore>()((set) => ({
+export const useUserStore = create<userStore>()((set) => ({
     user: {
         name: '',
         login: '',
@@ -102,7 +115,7 @@ export interface IEmployee {
             console.log(e)
         }
     },
-    getUserNames: async (userId: number | string) => {
+        getEmployees: async (userId: number | string) => {
         try {
             set({loading: true})
             const {data} = await instanceAxios('', {
@@ -113,14 +126,14 @@ export interface IEmployee {
                 }
             })
             set({loading: false})
-            return Object.values(data?.data)
+            return Object.values(data?.data ?? {})
 
         } catch (e) {
             set({loading: false})
             console.log(e)
         }
     },
-        getUserNameById: async (userId: number | string) => {
+        getEmployeeNameById: async (userId: number | string | undefined ) => {
             try {
                 set({loading: true})
                 const {data} = await instanceAxios('', {
@@ -131,14 +144,13 @@ export interface IEmployee {
                     }
                 })
                 set({loading: false})
-                return data?.data[userId]?.name
-
+                    return userId ? data?.data[userId]?.name : null
             } catch (e) {
                 set({loading: false})
                 console.log(e)
             }
         },
-    getDivision: async (divisionIds: string | number) => {
+    getDivisions: async (divisionIds: string | number) => {
         try {
             set({loading: true})
             const {data} = await instanceAxios('', {
@@ -149,8 +161,7 @@ export interface IEmployee {
                 }
             })
             set({loading: false})
-            console.log(data.data)
-          return  Object.values(data?.data || {})
+          return  Object.values(data?.data ?? {})
 
         } catch (e) {
             set({loading: false})
@@ -173,7 +184,7 @@ export interface IEmployee {
                 date: item,
                 data: [...Object.values(data[item][id])]
             }))
-            set({timesheetData: dataArray || []})
+            set({timesheetData: dataArray ?? []})
 
             set({loading: false})
         } catch (e) {
