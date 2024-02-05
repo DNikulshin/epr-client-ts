@@ -35,7 +35,7 @@ export const PaginationListItems = ({ itemsPerPage }: itemsPerPageProps) => {
           currentItems
             .map((item, idx: number) => {
               return (
-                <div className="accordion d-flex flex-column my-2" key={item.id}>
+                <div className="accordion d-flex flex-column my-3" key={item.id}>
                   {<Item {...item} numberItem={idx + 1} />}
                 </div>
               )

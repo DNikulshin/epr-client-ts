@@ -1,5 +1,4 @@
-import { AddComment } from './AddComment.tsx';
-import { CommentUser } from './Comment.tsx';
+import { CommentUser } from './Comment.tsx'
 import { Comment } from '../../../store/data-store/types.ts'
 import { FC, useState } from 'react'
 
@@ -68,7 +67,6 @@ export const Comments: FC<PropTypes> = ({
             <hr />
           </>
       }
-      <AddComment itemId={itemId}/>
     </div>
   )
 }

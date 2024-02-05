@@ -361,7 +361,7 @@ body {
 .btn-edit {
     position: absolute !important;
     right: 2rem !important;
-    top: 1rem !important;
+    top: 0 !important;
 }
 
 .btn-target:hover {
@@ -392,11 +392,25 @@ body {
 .btn-add {
     position: absolute !important;
     right: 2rem !important;
-    top: -1.5rem !important;
+    top: -2rem !important;
 }
 
 .textarea-resize {
     padding: .25rem!important;
     resize: none!important;
     overflow: hidden!important;
+}
+
+.hidden-input {
+    opacity: 0!important;
+    visibility: hidden!important;
+    width: 0!important;
+    overflow: hidden!important;
+    display: none!important;
+}
+
+.btn-attach {
+    position: absolute !important;
+    right: 5rem !important;
+    top: 0!important;
 }

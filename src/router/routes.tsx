@@ -1,4 +1,5 @@
 import {Navigate, Route, Routes} from 'react-router-dom'
+import Test from '../components/Test.tsx';
 import {ClaimsPage} from '../pages/ClaimsPage.tsx'
 import {AuthPage} from '../pages/AuthPage.tsx'
 import {UserPage} from '../pages/UserPage.tsx'
@@ -23,6 +24,10 @@ export const useRoutes = () => {
                            element={<InfoPage/>}
                     >
                     </Route>
+                  <Route path="upload/*"
+                       element={<Test/>}
+                  >
+                  </Route>
                     <Route path="*"
                            element={<Navigate to="/" replace/>}
                     >

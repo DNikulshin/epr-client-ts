@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { IEmployee, useUserStore } from '../../../store/user-store/user-store.ts'
 import { EmployeeItem } from './EmployeeItem.tsx'
 
@@ -7,6 +7,7 @@ export const Employee = (props: IEmployee) => {
   const [employees, setEmployees] = useState<IEmployee[]>([])
   const employeeIds = Object.keys(staff?.employee ?? {}).join(',')
   const getEmployees = useUserStore(state => state.getEmployees)
+ // const employeeStore = useUserStore(state => state.employeeStore)
 
   useEffect(() => {
     if(staff?.employee)
@@ -17,7 +18,7 @@ export const Employee = (props: IEmployee) => {
   }, [employeeIds, getEmployees, staff?.employee])
 
   return (
-    <div className="d-flex flex-wrap w-100 mt-1">
+    <div className="d-flex flex-wrap mt-1">
       {employees &&
         employees
           .map(item =>

@@ -33,7 +33,7 @@ export const useAuthStore = create<authStore>() ((set, get) => ({
             toast(null)
             set({error: null})
             set({loading: true})
-            const {data: {Result}} = await instanceAxios('', {
+            const {data: {Result}} = await instanceAxios('/api', {
                 data: formData,
                 params: {
                     cat: 'employee',
@@ -51,7 +51,7 @@ export const useAuthStore = create<authStore>() ((set, get) => ({
 
                 const {userName} = get()
                 if (!localStorage.getItem('userId')) {
-                    const {data: {id}} = await instanceAxios('', {
+                    const {data: {id}} = await instanceAxios('/api', {
                         params: {
                             cat: 'employee',
                             action: 'get_employee_id',
@@ -66,7 +66,7 @@ export const useAuthStore = create<authStore>() ((set, get) => ({
                 const { userId: id} = get()
 
                 if (!localStorage.getItem('divisionId')) {
-                    const {data: {data}} = await instanceAxios('', {
+                    const {data: {data}} = await instanceAxios('/api', {
                         params: {
                             cat: 'employee',
                             action: 'get_data',

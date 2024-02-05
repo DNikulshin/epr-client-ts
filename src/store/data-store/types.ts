@@ -6,6 +6,7 @@ export interface IItem {
     priority?: number
     type?: Type
     date?: any
+    attach?: Attach
     state?: State
     customer?: Customer
     address?: Address
@@ -30,7 +31,11 @@ export interface IItem {
     numberItem?: number
 }
 
-
+export interface Attach {
+    id: number
+    fileName: string
+    dateAdd: string
+}
 interface NodeItem {
     id: number
 }

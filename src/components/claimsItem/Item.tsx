@@ -1,4 +1,5 @@
 import { IDivision, IEmployee, useUserStore } from '../../store/user-store/user-store.ts'
+import { FileUpload } from '../FileUpload.tsx'
 import { AdditionalData } from './AdditionalData.tsx'
 import { AllowStaffAndDivisionList } from './AllowStaffAndDivision/AllowStaffAndDivisionList.tsx'
 import { DateTime } from './DateTime.tsx'
@@ -7,7 +8,7 @@ import { Employee } from './employee/Employee.tsx'
 import { Division } from './division/Division.tsx'
 import { ItemDetail } from './ItemDetail.tsx'
 import { ItemStatus } from './ItemStatus.tsx'
-import { MouseEventHandler, useCallback, useRef, useState } from 'react'
+import { MouseEventHandler, useCallback ,useRef, useState } from 'react'
 import { IItem } from '../../store/data-store/types.ts'
 import { useDataStore } from '../../store/data-store/data-store.ts'
 import { MapItem } from '../MapItem.tsx'
@@ -19,6 +20,7 @@ export const Item = (props: IItem) => {
     staff,
     address,
     type,
+    attach,
     numberItem
   } = props
 
@@ -30,10 +32,12 @@ export const Item = (props: IItem) => {
   const getAllowStaff = useDataStore(state => state.getAllowStaff)
   const getEmployees = useUserStore(state => state.getEmployees)
   const getDivisions = useUserStore(state => state.getDivisions)
+  //const attachGet = useDataStore(state => state.attachGet)
   const [isEdit, setIsEdit] = useState(false)
   const [isAdd, setIsAdd] = useState(false)
   const [staffNames, setStaffNames] = useState<IEmployee[]>([])
   const [divisionsNames, setDivisionsNames] = useState<IDivision[]>([])
+  // const [attachFiles, setAttachFiles] = useState([])
 
   const handleOpen: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation()
@@ -68,6 +72,13 @@ export const Item = (props: IItem) => {
     }
   }
 
+  // useEffect(() => {
+  //  async function getAttach() {
+  //    if(attach) setAttachFiles( await attachGet(attach))
+  //   }
+  //   getAttach()
+  // }, [attach, attachGet, id])
+
   if (switchComponent) {
     if (coordinates.lat && coordinates.lon) {
       return <div style={{
@@ -87,6 +98,14 @@ export const Item = (props: IItem) => {
       </div>
     }
   }
+  // const reader = new FileReader();
+  // reader.onload = event => {
+  //   const fileContent = event.target.result;
+  //   console.log(fileContent);
+  // }
+  // reader.readAsArrayBuffer('');
+  // console.log(attach);
+
   return (
     <>
       <div className="accordion-item box-shadow position-relative" ref={refItem}>
@@ -135,48 +154,53 @@ export const Item = (props: IItem) => {
               {type?.name && <div><strong className="me-2">Тип:</strong>{replaceSpecialSymbols(type?.name)}</div>}
 
               <AdditionalData {...props} />
-              <div className="w-100 d-flex flex-wrap position-relative">
-                <hr className="w-75" />
-                <Employee staff={staff} id={id} isEdit={isEdit}/>
+              <div className="d-flex flex-wrap position-relative w-100">
+                <div className="w-100">
+                  <hr className="w-50" />
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       width="30"
+                       height="30"
+                       fill="currentColor"
+                       className="bi bi-pencil-square btn-edit box-shadow btn-target"
+                       style={isEdit ? { color: 'brown' } : { color: 'inherit' }}
+                       viewBox="0 0 16 16"
+                       onClick={() => setIsEdit(prevState => !prevState)}
+                  >
+                    <path
+                      d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                    <path fillRule="evenodd"
+                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                  </svg>
+
+                  {isEdit &&
+                    <>
+                      {isAdd &&
+                        <AllowStaffAndDivisionList
+                          staffNames={staffNames}
+                          divisionsNames={divisionsNames}
+                          id={id}
+                        />
+                      }
+                      <svg xmlns="http://www.w3.org/2000/svg"
+                           width="28"
+                           height="28"
+                           fill="currentColor"
+                           className="bi bi-plus-square box-shadow btn-add btn-target"
+                           viewBox="0 0 16 16"
+                           onClick={AllowStaffAndDivisionHandler}
+                      >
+                        <path
+                          d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                        <path
+                          d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                      </svg>
+                    </>
+                  }
+                </div>
+
+                <Employee staff={staff} id={id} isEdit={isEdit} />
                 <Division staff={staff} id={id} isEdit={isEdit} />
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     width="30"
-                     height="30"
-                     fill="currentColor"
-                     className="bi bi-pencil-square btn-edit box-shadow btn-target"
-                     style={isEdit ? { color: 'brown' } : { color: 'inherit' }}
-                     viewBox="0 0 16 16"
-                     onClick={() => setIsEdit(prevState => !prevState)}
-                >
-                  <path
-                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                  <path fillRule="evenodd"
-                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                </svg>
-                {isEdit &&
-                  <>
-                    {isAdd &&
-                      <AllowStaffAndDivisionList
-                        staffNames={staffNames}
-                        divisionsNames={divisionsNames}
-                        id={id}
-                      />
-                    }
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="28"
-                         height="28"
-                         fill="currentColor"
-                         className="bi bi-plus-square box-shadow btn-add btn-target"
-                         viewBox="0 0 16 16"
-                         onClick={AllowStaffAndDivisionHandler}
-                    >
-                      <path
-                        d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
-                      <path
-                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                    </svg>
-                  </>
-                }
+                <FileUpload id={id} attach={attach} />
               </div>
             </div>
           </div>

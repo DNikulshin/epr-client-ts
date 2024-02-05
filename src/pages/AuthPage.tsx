@@ -20,7 +20,7 @@ export const AuthPage = () => {
     const data = await checkAuth(formValue);
     if (data) {
       navigate('/');
-      window.location.reload();
+      // window.location.reload();
     }
 
 

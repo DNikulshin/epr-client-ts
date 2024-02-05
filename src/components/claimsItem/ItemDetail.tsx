@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { CSSTransition } from 'react-transition-group'
 import { IItem } from '../../store/data-store/types.ts'
+import { AddComment } from './comments/AddComment.tsx';
 import { Comments } from './comments/Comments.tsx';
 import { replaceSpecialSymbols } from '../../utils/replacelSymbols.ts'
 
@@ -48,7 +49,10 @@ itemId
               {replaceSpecialSymbols(description)}
             </div>}
           {comments &&  <Comments comments={comments} itemId={itemId}/>}
-
+         <div>
+           <hr/>
+           <AddComment itemId={itemId}/>
+         </div>
           <button className="btn btn-outline-secondary d-flex align-self-end btn-hover"
                   onClick={() => {
                     if (setOpen) setOpen(false)
