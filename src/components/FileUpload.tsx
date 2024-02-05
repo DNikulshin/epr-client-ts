@@ -1,6 +1,6 @@
-import { ChangeEvent, useRef, useState } from 'react';
-import { useDataStore } from '../store/data-store/data-store.ts';
-import { Attach } from '../store/data-store/types.ts';
+import { ChangeEvent, useRef, useState } from 'react'
+import { useDataStore } from '../store/data-store/data-store.ts'
+import { Attach } from '../store/data-store/types.ts'
 
 interface InterfaceProptypes {
   id: number;
@@ -8,19 +8,20 @@ interface InterfaceProptypes {
 }
 
 export const FileUpload = ({ id, attach }: InterfaceProptypes) => {
-  const [selectedImages, setSelectedImages] = useState<FileList | null>(null);
+  const [selectedImages, setSelectedImages] = useState<FileList | null>(null)
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const attachAdd = useDataStore(state => state.attachAdd);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [openAttach, setOpenAttach] = useState(false);
+  const attachAdd = useDataStore(state => state.attachAdd)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [openAttach, setOpenAttach] = useState(false)
 
   const handleImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
       setSelectedImages(files)
-      console.log(selectedImages);
+      console.log(selectedImages)
       const formData = new FormData();
-      [...files].forEach((file) => {
+      [...files]
+        .forEach((file) => {
         formData.append('files', file)
       })
       await attachAdd({ id, formData })

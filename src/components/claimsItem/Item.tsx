@@ -155,8 +155,11 @@ export const Item = (props: IItem) => {
 
               <AdditionalData {...props} />
               <div className="d-flex flex-wrap position-relative w-100">
+
                 <div className="w-100">
                   <hr className="w-50" />
+                  <Employee staff={staff} id={id} isEdit={isEdit} />
+                  <Division staff={staff} id={id} isEdit={isEdit} />
                   <svg xmlns="http://www.w3.org/2000/svg"
                        width="30"
                        height="30"
@@ -197,9 +200,6 @@ export const Item = (props: IItem) => {
                     </>
                   }
                 </div>
-
-                <Employee staff={staff} id={id} isEdit={isEdit} />
-                <Division staff={staff} id={id} isEdit={isEdit} />
                 <FileUpload id={id} attach={attach} />
               </div>
             </div>

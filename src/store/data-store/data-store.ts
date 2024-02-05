@@ -114,7 +114,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
         cat: 'task',
         action: 'get_list',
         // 'date_do_from': '01.02.2024',
-        // 'date_do_to': '03.02.2024',
+        // 'date_do_to': '05.02.2024',
         'date_do_from': dateDo?.dateDoFrom,
         'date_do_to': dateDo?.dateDoTo,
         'employee_id': userId,
