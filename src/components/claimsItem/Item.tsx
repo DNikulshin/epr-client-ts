@@ -8,10 +8,10 @@ import { Employee } from './employee/Employee.tsx'
 import { Division } from './division/Division.tsx'
 import { ItemDetail } from './ItemDetail.tsx'
 import { ItemStatus } from './ItemStatus.tsx'
-import { MouseEventHandler, useCallback ,useRef, useState } from 'react'
+import { MouseEventHandler, useCallback, useRef, useState } from 'react'
 import { IItem } from '../../store/data-store/types.ts'
 import { useDataStore } from '../../store/data-store/data-store.ts'
-import { MapItem } from '../MapItem.tsx'
+import { MapItem } from '../MapItem.tsx';
 import { replaceSpecialSymbols } from '../../utils/replacelSymbols.ts'
 
 export const Item = (props: IItem) => {
@@ -21,43 +21,43 @@ export const Item = (props: IItem) => {
     address,
     type,
     attach,
-    numberItem
-  } = props
+    numberItem,
+  } = props;
 
-  const [open, setOpen] = useState(false)
-  const refItem = useRef<HTMLDivElement | null>(null)
-  const [switchComponent, setSwitchComponent] = useState(false)
-  const [coordinates, setCoordinates] = useState({ lat: 0, lon: 0 })
-  const getCoordinates = useDataStore(state => state.getCoordinates)
-  const getAllowStaff = useDataStore(state => state.getAllowStaff)
-  const getEmployees = useUserStore(state => state.getEmployees)
-  const getDivisions = useUserStore(state => state.getDivisions)
-  //const attachGet = useDataStore(state => state.attachGet)
-  const [isEdit, setIsEdit] = useState(false)
-  const [isAdd, setIsAdd] = useState(false)
-  const [staffNames, setStaffNames] = useState<IEmployee[]>([])
-  const [divisionsNames, setDivisionsNames] = useState<IDivision[]>([])
-  // const [attachFiles, setAttachFiles] = useState([])
+  const [open, setOpen] = useState(false);
+  const refItem = useRef<HTMLDivElement | null>(null);
+  const [switchComponent, setSwitchComponent] = useState(false);
+  const [coordinates, setCoordinates] = useState({ lat: 0, lon: 0 });
+  const getCoordinates = useDataStore(state => state.getCoordinates);
+  const getAllowStaff = useDataStore(state => state.getAllowStaff);
+  const getEmployees = useUserStore(state => state.getEmployees);
+  const getDivisions = useUserStore(state => state.getDivisions);
+  //const attachGet = useDataStore(state => state.attachGet);
+  const [isEdit, setIsEdit] = useState(false);
+  const [isAdd, setIsAdd] = useState(false);
+  const [staffNames, setStaffNames] = useState<IEmployee[]>([]);
+  const [divisionsNames, setDivisionsNames] = useState<IDivision[]>([]);
+  //const [attachUrls, setAttachUrls] = useState([]);
 
   const handleOpen: MouseEventHandler<HTMLDivElement> = (e) => {
-    e.stopPropagation()
-    setOpen(!open)
-  }
+    e.stopPropagation();
+    setOpen(!open);
+  };
 
   const handleClickItem = () => {
     if (refItem.current) {
-      refItem.current?.scrollIntoView({ behavior: 'smooth' })
+      refItem.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }
+  };
 
   const AllowStaffAndDivisionHandler = useCallback(async () => {
-    const data = await getAllowStaff(id)
-    const staffResponse = await getEmployees(data.staff.join(','))
-    const divisionResponse = await getDivisions(data.division.join(','))
-    if (staffResponse) setStaffNames(staffResponse)
-    if (divisionResponse) setDivisionsNames(divisionResponse)
-    setIsAdd(prevState => !prevState)
-  }, [getAllowStaff, getDivisions, getEmployees, id])
+    const data = await getAllowStaff(id);
+    const staffResponse = await getEmployees(data.staff.join(','));
+    const divisionResponse = await getDivisions(data.division.join(','));
+    if (staffResponse) setStaffNames(staffResponse);
+    if (divisionResponse) setDivisionsNames(divisionResponse);
+    setIsAdd(prevState => !prevState);
+  }, [getAllowStaff, getDivisions, getEmployees, id]);
 
 
   const getMap = async (claimId: number | undefined) => {
@@ -73,11 +73,37 @@ export const Item = (props: IItem) => {
   }
 
   // useEffect(() => {
-  //  async function getAttach() {
-  //    if(attach) setAttachFiles( await attachGet(attach))
+  //   const getAttach = async () => {
+  //    const test =  await attachGet(attach)
+  //     console.log(test);
+  //    // const test2 = URL.createObjectURL(test[0].data)
+  //    //  console.log(test);
+  //    //  console.log(test2);
+  //     // const buffer = await test[0].data.arrayBuffer();
+  //     // const bytes = new Uint8Array(buffer);
+  //     // const reader = new FileReader()
+  //     //
+  //     // // Event listener for when file is loaded
+  //     // reader.addEventListener('load', function () {
+  //     //   // Get the binary data from the file
+  //     //   const binaryImageData = reader.result;
+  //     //
+  //     //   // Do something with the binary image data
+  //     //   console.log(binaryImageData)
+  //     // });
+  //     //
+  //     // // Read the file as a binary text
+  //     // reader.readAsArrayBuffer(test[0].data);
+  //
+  //
+  //
+  //
+  //     // const blob = new Blob([...test]);
+  //     // console.log(blob);
   //   }
   //   getAttach()
-  // }, [attach, attachGet, id])
+  //
+  // }, [attach, attachGet])
 
   if (switchComponent) {
     if (coordinates.lat && coordinates.lon) {
@@ -95,7 +121,7 @@ export const Item = (props: IItem) => {
                   d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
           </svg>
         </button>
-      </div>
+      </div>;
     }
   }
   // const reader = new FileReader();
@@ -200,7 +226,7 @@ export const Item = (props: IItem) => {
                     </>
                   }
                 </div>
-                <FileUpload id={id} attach={attach} />
+                <FileUpload id={id} attach={attach}/>
               </div>
             </div>
           </div>
@@ -214,5 +240,5 @@ export const Item = (props: IItem) => {
         />
       </div>
     </>
-  )
-}
+  );
+};

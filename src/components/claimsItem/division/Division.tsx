@@ -8,7 +8,7 @@ export const Division = (props: IDivision) => {
  const [divisions, setDivisions] = useState<IDivision[]>([])
   const divisionIds = Object.keys(staff?.division || {}).join(',')
   const getDivision = useUserStore(state => state.getDivisions)
-  const divisionsStore = useUserStore(state => state.divisionStore)
+ // const divisionsStore = useUserStore(state => state.divisionStore)
 
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export const Division = (props: IDivision) => {
 
 
   }, [divisionIds, getDivision, staff?.division])
-  console.log(divisionsStore, 'divisionsStore');
+ // console.log(divisionsStore, 'divisionsStore');
   return (
     <div className="d-flex flex-wrap mt-1">
       {divisions &&

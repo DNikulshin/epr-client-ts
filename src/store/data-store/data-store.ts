@@ -1,10 +1,11 @@
-import moment from 'moment'
-import { create } from 'zustand'
-import { instanceAxios } from '../../axios.ts'
-import { getLocalStorage } from '../../hooks/interactionLocalStorage.ts'
-import { IItem } from './types.ts'
-import { toast } from 'react-toastify'
-import { AxiosError } from 'axios'
+import { AxiosError } from 'axios';
+import moment from 'moment';
+import { toast } from 'react-toastify';
+import { create } from 'zustand';
+import { instanceAxios } from '../../axios.ts';
+import ErrorStatusText from '../../components/error/errorStatus.ts';
+import { getLocalStorage } from '../../hooks/interactionLocalStorage.ts';
+import { Attach, IItem } from './types.ts';
 
 interface ChangeStateItemReturn {
   status: string
@@ -18,6 +19,7 @@ interface useDataStoreProps {
   userId: number | null,
   countItems: number
   listItemsId: string
+  // loadingFiles: boolean
   loading: boolean
   error: string | null
   getCoordinates: (id: number) => Promise<Coordinates>
@@ -42,7 +44,8 @@ interface useDataStoreProps {
   commentAdd: ({ itemId, commentText }: commentAddProps) => Promise<string>
   commentEdit: ({ id, itemId, commentText }: commentEditProps) => Promise<string>
   attachAdd: ({ id, formData }: attachProps) => Promise<any>
-  // attachGet: (id: number) => Promise<any>
+  attachGet: (id: Attach | undefined) => Promise<any>
+ // attachDelete: (id: number, fileName: string) => Promise<any>
   // divisionStore: IDivision[]
   // getDivisions: (id: number | string) => Promise<any>
 }
@@ -89,12 +92,24 @@ interface Device {
 const userId = localStorage.getItem('userId');
 const divisionId = localStorage.getItem('divisionId');
 
+
+// const readFileAsync = async (data: Blob) => {
+//   return new Promise((_resolve, reject) => {
+//     const reader = new FileReader()
+//     reader.onload = () => {
+//      const test =  reader.readAsBinaryString(data)
+//       reader.onerror = reject
+//     }
+//   })
+// }
+
 export const useDataStore = create<useDataStoreProps>()((set, get) => ({
   listItems: [],
   userId: getLocalStorage('userId'),
   countItems: 0,
   listItemsId: '',
   loading: false,
+  // loadingFiles: false,
   error: null,
   owners: [],
   devices: [],
@@ -114,7 +129,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
         cat: 'task',
         action: 'get_list',
         // 'date_do_from': '01.02.2024',
-        // 'date_do_to': '05.02.2024',
+        // 'date_do_to': '02.02.2024',
         'date_do_from': dateDo?.dateDoFrom,
         'date_do_to': dateDo?.dateDoTo,
         'employee_id': userId,
@@ -155,8 +170,11 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
 
     } catch (e) {
       if (e instanceof AxiosError) {
+        e.response?.statusText
+          ?
+          toast(ErrorStatusText[e.response?.statusText])
+          : toast(e.code);
         set({ error: e.code });
-        toast(e.code);
         set({ loading: false });
       } else {
         throw e;
@@ -261,25 +279,6 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
   },
-  // getDivisions: async (divisionIds: string | number) => {
-  //   try {
-  //     set({ loading: true });
-  //     const { data } = await instanceAxios('', {
-  //       params: {
-  //         cat: 'employee',
-  //         action: 'get_division',
-  //         id: divisionIds,
-  //       },
-  //     });
-  //     set({ loading: false });
-  //     set({divisionStore: Object.values(data?.data ?? {})})
-  //     return Object.values(data?.data ?? {});
-  //
-  //   } catch (e) {
-  //     set({ loading: false });
-  //     console.log(e);
-  //   }
-  // },
   divisionAdd: async (id, division_id) => {
     try {
       const { data } = await instanceAxios('/api', {
@@ -398,95 +397,19 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
   },
-  // attachGet: async (attach: any) => {
-  //   // console.log(Object.keys(attach ?? {}).join(''))
-  //
-  //   try {
-  //     const { data } = await instanceAxios('/api', {
-  //       params: {
-  //         cat: 'attach',
-  //         action: 'get_file',
-  //         // uuid: 'journal',
-  //         id: 12333,
-  //       },
-  //     });
-  //     console.log(data);
-  //     return data;
-  //     // const test =  Promise.all(Object.keys(attach ?? {})
-  //     //    .map(item => {
-  //     //      instanceAxios('/api', {
-  //     //        params: {
-  //     //          cat: 'attach',
-  //     //          action: 'get_file',
-  //     //          // uuid: 'journal',
-  //     //          id: item,
-  //     //        }
-  //     //      })
-  //     //    }))
-  //
-  //     // console.log(test, 'asdfsdfasfdsffasdfasdfasdfdsfadsfsdf');
-  //     // const files =  await Promise.all(Object.keys(data.data ?? {})
-  //     //    .map(item => {
-  //     //      instanceAxios('/api', {
-  //     //        method: "GET",
-  //     //        params: {
-  //     //          cat: 'attach',
-  //     //          action: 'get_file',
-  //     //          // uuid: 'journal',
-  //     //          id: item,
-  //     //        }
-  //     //      })
-  //     //    }))
-  //     //  console.log(files);
-  //     //  return files
-  //
-  //   } catch (e) {
-  //     if (e instanceof AxiosError) {
-  //       set({ error: e.code });
-  //       toast(e.code);
-  //       set({ loading: false });
-  //     } else {
-  //       set({ loading: false });
-  //       throw e;
-  //     }
-  //   }
-  // },
-  attachAdd: async ({ id, formData }) => {
+  attachGet: async (attach: any) => {
+    const attachKeys = Object.keys(attach ?? {})
     try {
-     const { data } = await instanceAxios('/upload', {
-        data: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+     return  await Promise.all(attachKeys
+        .map((key: any) => instanceAxios('/api', {
+          params: {
+            cat: 'attach',
+            action: 'get_file',
+            id: key,
+          }
+        }
+        )))
 
-     const response =  await  Promise.all(data?.urls
-            .map((item: any) => instanceAxios('/api', {
-              params: {
-                cat: 'attach',
-                action: 'add',
-                object_type: 'task',
-                object_id: id,
-                employee_id: userId,
-                src: item,
-              },
-            })))
-      console.log(response);
-        // .then(({ data }) => {
-        //   saveUrls.push(data?.urls)
-        //    return  Promise.all(data?.urls
-        //       .map((item: any) => instanceAxios('/api', {
-        //         params: {
-        //           cat: 'attach',
-        //           action: 'add',
-        //           object_type: 'task',
-        //           object_id: id,
-        //           employee_id: userId,
-        //           src: item,
-        //         },
-        //       })))
-        //   },
-        // );
     } catch (e) {
       if (e instanceof AxiosError) {
         set({ error: e.code });
@@ -498,6 +421,79 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
   },
+  attachAdd: async ({ id, formData }) => {
+    try {
+      // set({loadingFiles: true})
+      const { data } = await instanceAxios('/upload', {
+        data: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      })
+
+     const response = await Promise.all(data?.urls
+        .map((item: any) => instanceAxios('/api', {
+          params: {
+            cat: 'attach',
+            action: 'add',
+            object_type: 'task',
+            object_id: id,
+            employee_id: userId,
+            src: item,
+          }
+        })))
+
+
+      if(response) {
+        // set({loadingFiles: false})
+        toast(data?.message)
+        return  response
+      }
+
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        set({ error: e.code })
+        toast(e.code);
+        // set({loadingFiles: false})
+        set({ loading: false })
+      } else {
+        set({ loading: false })
+        // set({loadingFiles: false})
+        throw e;
+      }
+    }
+  },
+/*  attachDelete: async (id, fileName) => {
+    try {
+      // set({loadingFiles: true})
+      // const { data } = await instanceAxios('/upload', {
+      //   data: formData,
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   }
+      // })
+
+      const data  = await instanceAxios('/api', {
+          params: {
+            cat: 'attach',
+            action: 'delete',
+            id,
+            name: fileName,
+            //uuid: 'c4f0f241-731b-4699-9037-2cb3a20d0ea0'
+          }
+        })
+
+      console.log(data)
+
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        set({ error: e.code })
+        toast(e.code);
+      } else {
+        throw e;
+      }
+    }
+  },*/
   getCoordinates: async (id: number) => {
     try {
       const { data } = await instanceAxios('/api', {
