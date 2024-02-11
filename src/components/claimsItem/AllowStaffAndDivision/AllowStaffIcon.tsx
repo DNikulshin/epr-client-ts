@@ -31,7 +31,7 @@ export const AllowStaffIcon = ({id ,itemId}: AllowStaffIconProps) => {
   return (
    <>
      {!addEmployee ? <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-                          className="bi bi-person-add me-2 text-success btn-hover" viewBox="0 0 16 16"
+                          className="bi bi-person-add me-2 text-success btn-hover box-shadow_svg" viewBox="0 0 16 16"
                           onClick={addStaffHandler}
        >
          <path
@@ -41,7 +41,7 @@ export const AllowStaffIcon = ({id ,itemId}: AllowStaffIconProps) => {
        </svg>
        :
        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-            className="bi bi-person-dash me-2 text-danger" viewBox="0 0 16 16"
+            className="bi bi-person-dash me-2 text-danger box-shadow_svg" viewBox="0 0 16 16"
             onClick={deleteStaffHandler}
        >
          <path

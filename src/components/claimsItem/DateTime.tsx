@@ -29,7 +29,7 @@ export const DateTime = (props: IItem) => {
   return (
     <div className="my-2 box-shadow p-1 bg-light d-flex justify-content-center align-items-center me-1">
       <strong className="mx-2">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-alarm"
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-alarm box-shadow_svg"
              viewBox="0 0 16 16">
           <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
           <path

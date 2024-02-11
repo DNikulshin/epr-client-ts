@@ -116,7 +116,7 @@ export const Item = (props: IItem) => {
         <MapItem coordinates={coordinates} />
         <button onClick={() => setSwitchComponent(false)}>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-               className="bi bi-arrow-return-left" viewBox="0 0 16 16">
+               className="bi bi-arrow-return-left box-shadow_svg" viewBox="0 0 16 16">
             <path fillRule="evenodd"
                   d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
           </svg>
@@ -147,7 +147,7 @@ export const Item = (props: IItem) => {
                 <div className="btn btn-hover fs-4 d-flex"
                      onClick={() => getMap(address?.addressId)}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                       className="bi bi-geo-alt-fill text-danger" viewBox="0 0 16 16">
+                       className="bi bi-geo-alt-fill text-danger box-shadow_svg" viewBox="0 0 16 16">
                     <path
                       d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
                   </svg>
@@ -190,7 +190,7 @@ export const Item = (props: IItem) => {
                        width="30"
                        height="30"
                        fill="currentColor"
-                       className="bi bi-pencil-square btn-edit box-shadow btn-target"
+                       className="bi bi-pencil-square btn-edit box-shadow btn-target box-shadow_svg"
                        style={isEdit ? { color: 'brown' } : { color: 'inherit' }}
                        viewBox="0 0 16 16"
                        onClick={() => setIsEdit(prevState => !prevState)}
@@ -214,7 +214,7 @@ export const Item = (props: IItem) => {
                            width="28"
                            height="28"
                            fill="currentColor"
-                           className="bi bi-plus-square box-shadow btn-add btn-target"
+                           className="bi bi-plus-square box-shadow btn-add btn-target box-shadow_svg"
                            viewBox="0 0 16 16"
                            onClick={AllowStaffAndDivisionHandler}
                       >

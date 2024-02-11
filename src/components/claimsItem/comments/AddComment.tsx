@@ -50,7 +50,7 @@ export const AddComment: FC<PropTypes> = ({itemId}) => {
         {!open ?
 
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
-               className="bi bi-chat-left mx-5 btn-hover text-shadow"
+               className="bi bi-chat-left mx-5 btn-hover box-shadow_svg"
                viewBox="0 0 16 16"
                onClick={() => setOpen(prevState => !prevState)}
           >
@@ -60,7 +60,7 @@ export const AddComment: FC<PropTypes> = ({itemId}) => {
           :
           <>
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
-                 className="bi bi-x-square me-3 btn-target_remove text-shadow"
+                 className="bi bi-x-square me-3 btn-target_remove box-shadow_svg"
                  viewBox="0 0 16 16"
                  onClick={() => {
                    setOpen(false)
@@ -73,14 +73,12 @@ export const AddComment: FC<PropTypes> = ({itemId}) => {
                 d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
             </svg>
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
-                 className="bi bi-send me-2 btn-hover text-shadow"
-                 viewBox="0 0 16 16"
+                 className="bi bi-send-fill me-2 btn-hover text-primary box-shadow_svg" viewBox="0 0 16 16"
                  onClick={commentAddHandler}
             >
               <path
-                d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+                d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z" />
             </svg>
-
           </>
         }
       </div>

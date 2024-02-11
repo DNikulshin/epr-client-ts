@@ -138,7 +138,9 @@ body {
 .box-shadow {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5) !important;
 }
-
+.box-shadow_svg {
+    filter: drop-shadow(0 3px 2px rgb(0 0 0 / 0.4))!important;
+}
 .text-sh {
     text-shadow: 3px -2px #000;
 }

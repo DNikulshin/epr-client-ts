@@ -31,7 +31,7 @@ export const AllowDivision = ({ id, divisionItemId, divisionName }: IDivision) =
                width="28"
                height="28"
                fill="currentColor"
-               className="bi bi-plus-square box-shadow btn-target me-2 text-success"
+               className="bi bi-plus-square box-shadowp me-2 text-success box-shadow_svg"
                viewBox="0 0 16 16"
                onClick={() => addDivisionHandler(id, divisionItemId)}
         >
@@ -45,7 +45,7 @@ export const AllowDivision = ({ id, divisionItemId, divisionName }: IDivision) =
              width="28"
              height="28"
              fill="currentColor"
-             className="bi bi-dash-square  box-shadow btn-target me-2 text-danger"
+             className="bi bi-dash-square  box-shadow btn-target me-2 text-danger box-shadow_svg"
              viewBox="0 0 16 16"
              onClick={() => deleteDivisionHandler(id, divisionItemId)}
         >

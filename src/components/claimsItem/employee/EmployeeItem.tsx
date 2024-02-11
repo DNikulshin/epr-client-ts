@@ -20,7 +20,7 @@ export const EmployeeItem = ({id, itemId, itemName, isEdit}: IEmployee) => {
             >
         {!isDeleteEmployee && isEdit &&
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-               className="bi bi-x text-danger me-1 box-shadow mb-2 me-2 btn-target_remove"
+               className="bi bi-x text-danger me-1 box-shadow mb-2 me-2 btn-target_remove box-shadow_svg"
                viewBox="0 0 16 16"
                onClick={() => id ? deleteEmployee(id, itemId) : false}
           >
