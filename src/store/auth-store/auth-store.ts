@@ -2,6 +2,7 @@ import {create} from 'zustand'
 import {instanceAxios} from '../../axios.ts'
 import {toast} from 'react-toastify'
 import {AxiosError} from "axios";
+import ErrorStatusText from '../../components/error/errorStatus.ts';
 
 interface authStore {
     isAuth: boolean
@@ -84,7 +85,10 @@ export const useAuthStore = create<authStore>() ((set, get) => ({
         } catch (e) {
             if (e instanceof AxiosError) {
                 set({error: e.code})
-                toast(e.code)
+                e.response?.statusText
+                  ?
+                  toast(ErrorStatusText[e.response?.statusText])
+                  : toast(e.code);
                 set({loading: false})
             } else {
                 set({loading: false})

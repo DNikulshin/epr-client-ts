@@ -14,13 +14,13 @@ export const AuthPage = () => {
     e.preventDefault();
     const loginFormData = new FormData();
     if (!formValue.login || !formValue.pass) return;
-    loginFormData.append('username', formValue.login);
-    loginFormData.append('password', formValue.pass);
+    loginFormData.append('username', formValue.login.trim());
+    loginFormData.append('password', formValue.pass.trim());
 
     const data = await checkAuth(formValue);
     if (data) {
-      navigate('/');
-      // window.location.reload();
+      navigate('/')
+      window.location.reload()
     }
 
 

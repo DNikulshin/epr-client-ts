@@ -45,14 +45,18 @@ interface useDataStoreProps {
   commentEdit: ({ id, itemId, commentText }: commentEditProps) => Promise<string>
   attachAdd: ({ id, formData }: attachProps) => Promise<any>
   attachGet: (id: Attach | undefined) => Promise<any>
+  getNodes: () => Promise<any>
+  nodes: any[]
  // attachDelete: (id: number, fileName: string) => Promise<any>
   // divisionStore: IDivision[]
   // getDivisions: (id: number | string) => Promise<any>
 }
 
 export interface attachProps {
-  id: number;
+  id?: number;
+  number?: number;
   formData: FormData;
+  objectType: string;
 }
 
 interface commentEditProps {
@@ -115,6 +119,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
   devices: [],
   notepad: [],
   chapter: [],
+  nodes: [],
   isDeleteDivision: false,
   //divisionStore: [],
   currentStatusStateItem: getLocalStorage('statusChangeItem'),
@@ -128,10 +133,10 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       const paramsRequestEmployee = {
         cat: 'task',
         action: 'get_list',
-        'date_do_from': '01.02.2024',
-        'date_do_to': '05.02.2024',
-        // 'date_do_from': dateDo?.dateDoFrom,
-        // 'date_do_to': dateDo?.dateDoTo,
+        // 'date_do_from': '01.02.2024',
+        // 'date_do_to': '05.02.2024',
+        'date_do_from': dateDo?.dateDoFrom,
+        'date_do_to': dateDo?.dateDoTo,
         'employee_id': userId,
         // 'division_id_with_staff': localStorage.getItem('divisionId'),
         'state_id ': '1,3,4,5',
@@ -172,11 +177,12 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       if (e instanceof AxiosError) {
         e.response?.statusText
           ?
-          toast(ErrorStatusText[e.response?.statusText])
+          console.log(ErrorStatusText[e.response?.statusText])
           : toast(e.code);
         set({ error: e.code });
         set({ loading: false });
       } else {
+        set({ loading: false });
         throw e;
       }
     }
@@ -421,9 +427,8 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
   },
-  attachAdd: async ({ id, formData }) => {
+  attachAdd: async ({ id, formData, objectType }) => {
     try {
-      // set({loadingFiles: true})
       const { data } = await instanceAxios('/upload', {
         data: formData,
         headers: {
@@ -436,7 +441,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
           params: {
             cat: 'attach',
             action: 'add',
-            object_type: 'task',
+            object_type: objectType,
             object_id: id,
             employee_id: userId,
             src: item,
@@ -445,7 +450,10 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
 
 
       if(response) {
-        // set({loadingFiles: false})
+        const response = await Promise.all(data?.fileNames
+          .map((item: any) => instanceAxios(`/upload/${item}`, {
+            method: "DELETE"
+          })))
         toast(data?.message)
         return  response
       }
@@ -519,6 +527,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
   },
   getOwners: async () => {
     try {
+      set({loading: true})
       const { data: { data } } = await instanceAxios('/api', {
         params: {
           cat: 'owner',
@@ -526,12 +535,34 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
         },
       });
       set({ owners: Object.values(data) });
-
+      set({loading: false})
     } catch (e) {
       if (e instanceof AxiosError) {
         set({ error: e.code });
         toast(e.code);
         set({ loading: false });
+      } else {
+        set({ loading: false });
+        throw e;
+      }
+    }
+  },
+  getNodes: async () => {
+    try {
+      set({loading: true})
+      const { data: { data } } = await instanceAxios('/api', {
+        params: {
+          cat: 'node',
+          action: 'get',
+        },
+      });
+      set({ nodes: Object.values(data) })
+      set({loading: false})
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        set({ error: e.code })
+        toast(e.code)
+        set({ loading: false })
       } else {
         set({ loading: false });
         throw e;

@@ -19,7 +19,7 @@ export default function App() {
       <small
         className="version-app"
       >
-        v_0.2
+        v_0.3
       </small>
       {routes}
       <ToastContainer

@@ -226,7 +226,7 @@ export const Item = (props: IItem) => {
                     </>
                   }
                 </div>
-                <FileUpload id={id} attach={attach}/>
+                <FileUpload id={id} attach={attach} objectType='task'/>
               </div>
             </div>
           </div>

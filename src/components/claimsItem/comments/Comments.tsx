@@ -64,7 +64,6 @@ export const Comments: FC<PropTypes> = ({
                               </svg>
                             }</span>
             </button>}
-            <hr />
           </>
       }
     </div>

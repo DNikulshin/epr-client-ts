@@ -5,10 +5,12 @@ import { Attach } from '../store/data-store/types.ts'
 interface InterfaceProptypes {
   id: number;
   attach?: Attach;
+  objectType: string
+  styles?: string
   // attachUrls: any[]
 }
 
-export const FileUpload = ({ id, attach}: InterfaceProptypes) => {
+export const FileUpload = ({ id, attach, objectType, styles = ''}: InterfaceProptypes) => {
   const [selectedImages, setSelectedImages] = useState<FileList | null>(null)
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const attachAdd = useDataStore(state => state.attachAdd)
@@ -46,7 +48,7 @@ export const FileUpload = ({ id, attach}: InterfaceProptypes) => {
           setPreviewUrls(results)
         })
       setLoadingFiles(true)
-      const response = await attachAdd({ id, formData})
+      const response = await attachAdd({ id, formData, objectType})
       if(response) {
         setLoadingFiles(false)
       }
@@ -68,7 +70,10 @@ export const FileUpload = ({ id, attach}: InterfaceProptypes) => {
 
   if(loadingFiles) {
     return (
-      <div>loading...</div>
+      <div className="d-flex justify-content-center align-items-center w-100">
+        <span className="loader_file me-2"></span>
+        <span>Загрузка файлов...</span>
+      </div>
     )
   }
 
@@ -78,7 +83,7 @@ export const FileUpload = ({ id, attach}: InterfaceProptypes) => {
            width="30"
            height="30"
            fill="currentColor"
-           className="bi bi-paperclip btn-hover btn-attach box-shadow_svg"
+           className={`bi bi-paperclip btn-hover btn-attach${styles} box-shadow_svg`}
            viewBox="0 0 16 16"
            onClick={handleClick}
       >

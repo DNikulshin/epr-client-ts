@@ -134,29 +134,27 @@ export const Navigation = ({logout}: navigationProps) => {
                             </svg>
                         </NavLink>
                         <NavLink
-                            className="btn btn-outline-warning text-light btn-shadow"
-                            to='/info'
-                            title="info"
+                          className="btn btn-outline-warning text-light btn-shadow"
+                          to="/info"
+                          title="info"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
-                                 className="bi bi-info-square" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                 className="bi bi-search" viewBox="0 0 16 16">
                                 <path
-                                    d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                                <path
-                                    d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                             </svg>
                         </NavLink>
                     </div>
 
-             <div className="logout">
-                 <Link
-                     className="btn btn-sm btn-danger text-white btn-shadow"
-                     to='/login'
-                     title="Выйти"
-                     onClick={logout}
-                 >
-                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
-                          className="bi bi-power" viewBox="0 0 16 16">
+                    <div className="logout">
+                        <Link
+                          className="btn btn-sm btn-danger text-white btn-shadow"
+                          to="/login"
+                          title="Выйти"
+                          onClick={logout}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                                 className="bi bi-power" viewBox="0 0 16 16">
                          <path d="M7.5 1v7h1V1z"/>
                          <path
                              d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812"/>

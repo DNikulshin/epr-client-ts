@@ -85,7 +85,7 @@ export const UserPage: FC = () => {
                   key={item?.date}
                 >
                   {
-                    item?.data.join('').includes('994')
+                    item?.data.join('').includes('994') ||  item?.data.join('').includes('8')
                       ? <span
                         className={currentDate === item?.date
                           ? 'text-bg-danger p-1'
