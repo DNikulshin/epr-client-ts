@@ -1,9 +1,9 @@
-import { ChangeEvent, useRef, useState } from 'react'
+import { ChangeEvent, useRef, useState } from 'react';
 import { useDataStore } from '../store/data-store/data-store.ts'
 import { Attach } from '../store/data-store/types.ts'
 
 interface InterfaceProptypes {
-  id: number;
+  id: number | undefined;
   attach?: Attach;
   objectType: string
   styles?: string
@@ -14,6 +14,7 @@ export const FileUpload = ({ id, attach, objectType, styles = ''}: InterfaceProp
   const [selectedImages, setSelectedImages] = useState<FileList | null>(null)
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const attachAdd = useDataStore(state => state.attachAdd)
+ // const attachGet = useDataStore(state => state.attachGet)
   //const attachDelete = useDataStore(state => state.attachDelete)
   const inputRef = useRef<HTMLInputElement>(null)
   const [openAttach, setOpenAttach] = useState(false)
@@ -63,10 +64,20 @@ export const FileUpload = ({ id, attach, objectType, styles = ''}: InterfaceProp
     }
   }
 
+  // const getImg =  useCallback( async (id: number) => {
+  //   return await attachGet(id)
+  // }, [attachGet])
+
 /*  const handleDelete = async (id: number ,fileName: string) => {
     console.log(id);
    await attachDelete(id, fileName)
   }*/
+
+  // useEffect(() => {
+  //   attachGet(attach).then((data) => {
+  //     console.log(data);
+  //   })
+  // }, [attach, attachGet])
 
   if(loadingFiles) {
     return (
@@ -131,12 +142,17 @@ export const FileUpload = ({ id, attach, objectType, styles = ''}: InterfaceProp
           {/*  <path*/}
           {/*    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />*/}
           {/*</svg>*/}
+
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                className="bi bi-image me-2" viewBox="0 0 16 16">
             <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
             <path
               d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z" />
           </svg>
+          {/*<img src={`${import.meta.env.VITE_APP_MIDDLEWARE_API_URL}/api?key=${import.meta.env.VITE_APP_API_KEY}&cat=attach&action=get_file&id=${item.id}`}*/}
+          {/*     alt={item.name}*/}
+          {/*     style={{ width: 80 , height: 80}}*/}
+          {/*/>*/}
           <small className="me-2">id: {item.id}</small>
           <small className="text-primary">{item?.dateAdd}</small>
           {/*{attachUrls && <img src={URL.createObjectURL(attachUrls[0])} alt="Image" />}*/}

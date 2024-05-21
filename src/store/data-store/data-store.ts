@@ -5,7 +5,7 @@ import { create } from 'zustand';
 import { instanceAxios } from '../../axios.ts';
 import ErrorStatusText from '../../components/error/errorStatus.ts';
 import { getLocalStorage } from '../../hooks/interactionLocalStorage.ts';
-import { Attach, IItem } from './types.ts';
+import { IItem } from './types.ts';
 
 interface ChangeStateItemReturn {
   status: string
@@ -16,6 +16,7 @@ interface ChangeStateItemReturn {
 interface useDataStoreProps {
   listItems: IItem[]
   getItems: (d: dateDoProps) => void
+  showItemById: (id: string) => Promise<any>
   userId: number | null,
   countItems: number
   listItemsId: string
@@ -44,7 +45,7 @@ interface useDataStoreProps {
   commentAdd: ({ itemId, commentText }: commentAddProps) => Promise<string>
   commentEdit: ({ id, itemId, commentText }: commentEditProps) => Promise<string>
   attachAdd: ({ id, formData }: attachProps) => Promise<any>
-  attachGet: (id: Attach | undefined) => Promise<any>
+  attachGet: (id: number) => Promise<any>
   getNodes: () => Promise<any>
   nodes: any[]
  // attachDelete: (id: number, fileName: string) => Promise<any>
@@ -82,10 +83,12 @@ interface dateDoProps {
   typeRequest?: string
 }
 
-interface Owner {
+export interface Owner {
   address?: string;
   name?: string;
   phone?: string;
+  id?: number
+  number?: string
 }
 
 interface Device {
@@ -139,7 +142,7 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
         'date_do_to': dateDo?.dateDoTo,
         'employee_id': userId,
         // 'division_id_with_staff': localStorage.getItem('divisionId'),
-        'state_id ': '1,3,4,5',
+        'state_id ': '1,2,3,4,5',
         // 'state_id ': '1,2,3,4,5'
       };
 
@@ -187,6 +190,32 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
 
+  },
+  showItemById: async (id: number | string) => {
+    try {
+      toast(null);
+      set({ error: null });
+      set({ loading: true });
+
+      const showItem = await instanceAxios('/api', {
+        params: {
+          cat: 'task',
+          action: 'show',
+          id: id,
+        },
+      })
+      set({ loading: false });
+      return showItem.data.data
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        toast(e.code);
+        set({ error: e.code });
+        set({ loading: false });
+      } else {
+        set({ loading: false });
+        throw e;
+      }
+    }
   },
   changeStateItem: async ({ id, state_id }) => {
     console.log(state_id);
@@ -403,19 +432,18 @@ export const useDataStore = create<useDataStoreProps>()((set, get) => ({
       }
     }
   },
-  attachGet: async (attach: any) => {
-    const attachKeys = Object.keys(attach ?? {})
+  attachGet: async (id: any) => {
+   // const attachKeys = Object.keys(attach ?? {})
     try {
-     return  await Promise.all(attachKeys
-        .map((key: any) => instanceAxios('/api', {
+    const data =  instanceAxios('/api', {
           params: {
             cat: 'attach',
             action: 'get_file',
-            id: key,
+            id: id,
           }
-        }
-        )))
+        })
 
+      console.log(data);
     } catch (e) {
       if (e instanceof AxiosError) {
         set({ error: e.code });

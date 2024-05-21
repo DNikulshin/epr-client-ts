@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useDataStore } from '../store/data-store/data-store.ts';
+import { Owner, useDataStore } from '../store/data-store/data-store.ts';
 import { useDebounce } from 'use-debounce';
 import { FileUpload } from '../components/FileUpload.tsx';
 import ReactPaginate from 'react-paginate';
+import { NodeItem } from '../store/data-store/types.ts';
 
 
 const itemsPerPage = 50
@@ -17,11 +18,11 @@ export const InfoPage = () => {
   const [openNodes, setOpenNodes] = useState(false)
   const loading = useDataStore((state) => state.loading);
   const [itemOffset, setItemOffset] = useState(0)
-  const pageCount = (countItems: any[]) => Math.ceil(countItems.length / itemsPerPage)
+  const pageCount = (countItems: NodeItem[] | Owner[]) => Math.ceil(countItems.length / itemsPerPage)
   const endOffset = itemOffset + itemsPerPage
 
 
-  const filteredArray = useCallback((array: any) => array.filter((field: { name: string, number: any }) => {
+  const filteredArray = useCallback((array: NodeItem[] | Owner[]) => array.filter((field) => {
     if (value) {
       return field?.name?.toLowerCase().trim().includes(value.toLowerCase().trim()) ||
         field?.number?.toLowerCase().includes(value.toLowerCase())
@@ -40,7 +41,7 @@ export const InfoPage = () => {
 
 
   useEffect(() => {
-    Promise.all([getOwners(),getNodes()])
+    Promise.all([getOwners(), getNodes()])
   }, [getNodes, getOwners])
 
   if (loading) {
@@ -86,8 +87,9 @@ export const InfoPage = () => {
         </button>
         {filteredArray(nodes).length > 0 && <strong>{filteredArray(nodes).length}</strong>}
       </div>
+
       {openOwners && <ul className="list-group d-flex flex-column gap-2 mb-5">
-        {owners && filteredArray(owners).map((item: any, idx: number) => {
+        {owners && filteredArray(owners).map((item: Owner, idx: number) => {
           return (
             <li className="list-group-item" key={item?.id}>
               <small className="fw-bold mx-1">#{idx + 1}</small>
@@ -121,11 +123,10 @@ export const InfoPage = () => {
       }
 
       {openNodes && <ul className="list-group d-flex gap-2 mb-5">
-        {nodes && filteredArray(nodes).map((item: any) => {
+        {nodes && filteredArray(nodes).map((item: NodeItem) => {
           return (
             <li className="list-group-item d-flex justify-content-between" key={item?.id}>
-              {/*<small className="fw-bold mx-1">#{item?.number}</small>*/}
-              <span>{item?.name}</span>
+              <span>{item?.name?.replace(',', ' ')}</span>
               <FileUpload id={item?.id} objectType="node" styles="-custom" />
             </li>
           )

@@ -24,11 +24,20 @@ export const UserPage: FC = () => {
   const loading = useUserStore(state => state.loading)
   const error = useDataStore(state => state.error)
   const [openDetail, setOpenDetail] = useState(false)
+/*
+  const currentMonth = moment().format('MMMM');
+  const datesInCurrentMonth = [];
+  for (let i = 1; i <= moment().daysInMonth(); i++) {
+    const date = moment(`${currentMonth} ${i}`, 'MMMM D').format('YYYY-MM-DD')
+    datesInCurrentMonth.push({ date})
+    console.log(datesInCurrentMonth);
+  }*/
 
   useEffect(() => {
     if (id) {
       getData(id)
       getTimesheetData(id)
+
     }
 
   }, [getData, getTimesheetData, id])
@@ -42,6 +51,7 @@ export const UserPage: FC = () => {
       <span className="loader"></span>
     </div>
   }
+ console.log(timesheetData);
 
   return (
     <>
@@ -49,10 +59,11 @@ export const UserPage: FC = () => {
       <div className="d-flex justify-content-center align-items-center flex-column w-100">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <strong className="mx-2">ФИО: {name}</strong>
-          <button className="btn btn-outline-primary btn-sm"
+          <button className="btn btn-outline-primary btn-sm me-2"
                   onClick={() => setOpenDetail(prevState => !prevState)}>
             {!openDetail ? 'Подробнее...' : 'Скрыть'}
           </button>
+
         </div>
 
         {openDetail && <ul className="list-group mb-3 w-100">
@@ -81,25 +92,23 @@ export const UserPage: FC = () => {
             .map(item => {
               return (
                 <div
-                  className="border bg-light d-flex"
+                  className="border bg-light d-flex box-shadow"
                   key={item?.date}
                 >
                   {
                     item?.data.join('').includes('994') ||  item?.data.join('').includes('8')
                       ? <span
                         className={currentDate === item?.date
-                          ? 'text-bg-danger p-1'
-                          : 'text-bg-primary p-1'}
+                          ? 'text-bg-danger p-1 box-shadow'
+                          : 'text-bg-primary p-1 box-shadow'}
                       >
-                        {/*<small className=''>{getCurrentDay(item?.date)}</small>*/}
                         {item?.date}
                                     </span>
                       : <span
                         className={currentDate === item?.date
-                          ? 'text-danger p-1'
-                          : 'text-secondary p-1'}
+                          ? 'text-danger p-1 box-shadow'
+                          : 'text-secondary p-1 box-shadow'}
                       >
-                       {/*<small className=''>{getCurrentDay(item?.date)}</small>*/}
                         {item?.date}
                                         </span>
                   }

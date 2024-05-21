@@ -8,6 +8,28 @@ export const DateTime = (props: IItem) => {
   const changeDateWork = useDataStore(state => state.changeDateWork)
   const [selectedDate, setSelectedDate] = useState(moment(date?.todo).format('YYYY-MM-DD'))
   const [selectedTime, setSelectedTime] = useState(date?.todo.split(' ')[1].slice(0, -3))
+  //const [currentTime, setCurrentTime] = useState(moment().format("HH:mm"))
+  //const [currentDate, setCurrentDate] = useState(moment().format('YYYY-MM-DD'))
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentTime(moment().format("HH:mm"))
+  //     setCurrentDate(moment().format('YYYY-MM-DD'))
+  //   }, 1000)
+  //
+  //   return () => {
+  //     clearInterval(interval)
+  //   };
+  // }, [])
+
+  // if(selectedDate === currentDate && selectedTime === currentTime) {
+  //   new Notification(
+  //     id.toString(), {
+  //       body: `${address?.text} \n Назначено: ${moment(currentDate).format('DD.MM.YYYY')} ${currentTime}`,
+  //       tag: 'notification'
+  //     }
+  //   )
+  // }
 
   const handleDateChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target?.value) {

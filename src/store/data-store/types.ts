@@ -36,8 +36,10 @@ export interface Attach {
     fileName: string
     dateAdd: string
 }
-interface NodeItem {
-    id: number
+export interface NodeItem {
+    id?: number
+    name?: string
+    number?: string
 }
 
 export interface Type {
